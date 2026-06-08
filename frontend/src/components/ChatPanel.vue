@@ -52,7 +52,7 @@ onMounted(() => {
     </FlexRow>
 
     <!-- Message View Box -->
-    <ScrollArea class="flex-1 min-h-[220px] max-h-[300px] pr-2">
+    <ScrollArea class="flex-1 min-h-[220px] pr-2">
       <div class="space-y-2.5">
         <FlexRow v-for="msg in chatMessages" :key="msg.id" align="start" gap="3" class="text-xs animate-slide-up">
           <!-- System Messages -->
@@ -76,7 +76,7 @@ onMounted(() => {
             <FlexCol gap="1">
               <FlexRow gap="2">
                 <span class="font-semibold text-slate-200">{{ msg.nickname }}</span>
-                <span class="text-[9px] text-slate-600">
+                <span class="text-[10px] text-slate-600">
                   {{ new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }}
                 </span>
               </FlexRow>

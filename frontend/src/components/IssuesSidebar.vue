@@ -138,7 +138,7 @@ function getTaskPointsDisplay(task: any) {
               class="p-2 rounded-lg text-xs transition duration-200 select-none" :class="getTaskClass(task)">
               <FlexCol gap="1" class="max-w-[70%]">
                 <span class="truncate text-slate-200">{{ task.title }}</span>
-                <span class="text-[9px] text-slate-500 font-mono">
+                <span class="text-[11px] text-slate-500 font-mono">
                   {{ getTaskStatusLabel(task) }}
                 </span>
               </FlexCol>

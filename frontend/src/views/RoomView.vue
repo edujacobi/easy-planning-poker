@@ -78,24 +78,26 @@ const endMessage = computed(() => roomStore.isAdmin ? 'Define more stories/tasks
       :endMessage="endMessage" @submit="handleAddStories" @cancel="roomStore.finishSession('cancel')" />
 
     <!-- 4. Active Estimation Workbench -->
-    <FlexCol v-else gap="6" class="max-w-7xl mx-auto">
+    <FlexCol v-else gap="6" class="max-w-8xl mx-auto">
       <!-- Top Action bar / Header -->
       <RoomHeaderComponent :roomTitle="roomStore.room?.title" :roomId="roomStore.room?.id" />
 
       <!-- Main Columns view Grid layout -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        <!-- Left Side: Table & Cards Deck (Span 2) -->
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+
+        <!-- Left side: Issues -->
+        <IssuesSidebar />
+
+        <!-- Center: Table & Cards Deck (Span 2) -->
         <div class="lg:col-span-2 space-y-4">
           <RoomTable />
           <CardSelection />
         </div>
 
-        <!-- Right Side: Sidebar Accordion list & Chat log (Span 1) -->
-        <div class="grid grid-cols-1 gap-6 h-full">
-          <IssuesSidebar />
-          <ChatPanel />
-        </div>
+        <!-- Right side: Chat -->
+        <ChatPanel />
       </div>
+
     </FlexCol>
 
     <!-- 5. Finish session check modal -->
@@ -107,8 +109,16 @@ const endMessage = computed(() => roomStore.isAdmin ? 'Define more stories/tasks
 .animate-fade-in {
   animation: alertFadeIn 0.3s ease-out forwards;
 }
+
 @keyframes alertFadeIn {
-  from { opacity: 0; transform: translate(-50%, -10px); }
-  to { opacity: 1; transform: translate(-50%, 0); }
+  from {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
 }
 </style>
