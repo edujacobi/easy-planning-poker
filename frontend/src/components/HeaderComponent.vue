@@ -9,9 +9,8 @@ import { Sparkles } from 'lucide-vue-next';
       <Sparkles class="w-3.5 h-3.5" />
       Real-Time Estimation Platform
     </div>
-    <h1
-      class="text-4xl md:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-      Planning Poker
+    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-violet-200">
+      Easy Planning Poker
     </h1>
     <p class="text-slate-400 mt-2 text-sm md:text-base max-w-md mx-auto">
       Fast, collaborative, and seamless agile estimation. Create a room and invite your team.
