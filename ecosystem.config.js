@@ -2,8 +2,8 @@ module.exports = {
   apps: [
     {
       name: "planning-poker-backend",
-      script: "npm",
-      args: "run start:dev",
+      script: "node_modules/@nestjs/cli/bin/nest.js",
+      args: "start --watch",
       cwd: "./backend",
       watch: false,
       env: {
@@ -13,8 +13,8 @@ module.exports = {
     },
     {
       name: "planning-poker-frontend",
-      script: "npm",
-      args: "run dev",
+      script: "node_modules/vite/bin/vite.js",
+      args: "",
       cwd: "./frontend",
       watch: false,
       env: {
