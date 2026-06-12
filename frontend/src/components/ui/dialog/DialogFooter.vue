@@ -13,10 +13,11 @@ const props = withDefaults(defineProps<{
 </script>
 
 <template>
-  <div
-    data-slot="dialog-footer"
-    :class="cn('bg-muted/50 -mx-4 -mb-4 rounded-b-xl border-t p-4 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end', props.class)"
-  >
+  <div data-slot="dialog-footer" :class="cn(
+    'bg-muted/50 -mx-4 -mb-4 rounded-b-xl border-t p-4 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end',
+    'flex flex-col gap-2 mt-4 sm:flex-col sm:gap-2',
+    props.class
+  )">
     <slot />
     <DialogClose v-if="showCloseButton" as-child>
       <Button variant="outline">

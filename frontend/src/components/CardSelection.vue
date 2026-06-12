@@ -45,7 +45,7 @@ function selectCard(card: string) {
 }
 
 // Computed labels and styles helper
-const chooseCardLabel = computed(() => roomStore.activeTaskId ? 'Choose your card 👇' : 'Select a task to start voting');
+const chooseCardLabel = computed(() => roomStore.activeTaskId ? 'Choose your card' : 'Select a task to start voting');
 
 function getCardClass(card: string) {
   const isVoteActive = activeVote.value === card;
@@ -53,8 +53,8 @@ function getCardClass(card: string) {
 
   return [
     isVoteActive
-      ? 'bg-gradient-to-b from-violet-600 to-indigo-600 border-violet-400 text-white -translate-y-2 shadow-lg shadow-violet-500/20 scale-105'
-      : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-700 hover:text-slate-100 hover:-translate-y-1',
+      ? 'bg-indigo-700 border-indigo-500 text-white -translate-y-2 scale-105'
+      : 'bg-slate-950 border-slate-800 text-slate-500 hover:bg-slate-900 hover:border-slate-700 hover:text-slate-400 hover:-translate-y-1',
 
     isInteractionDisabled ? 'opacity-40 cursor-not-allowed hover:translate-y-0' : 'cursor-pointer'
   ];
@@ -71,7 +71,7 @@ function getCardClass(card: string) {
     <div class="flex flex-wrap gap-2 md:gap-3 justify-center items-center px-4 max-w-3xl">
       <button v-for="card in cardOptions" :key="card" type="button" @click="selectCard(card)"
         :disabled="roomStore.votingRevealed || !roomStore.activeTaskId"
-        class="h-16 w-11 md:h-20 md:w-14 rounded-xl border-2 flex items-center justify-center font-bold text-lg md:text-xl transition-all duration-200 select-none shadow-md"
+        class="h-16 w-11 md:h-20 md:w-14 rounded-xl border-2 flex items-center justify-center font-bold text-lg md:text-xl transition-all duration-150 select-none shadow-md"
         :class="getCardClass(card)">
         {{ card }}
       </button>

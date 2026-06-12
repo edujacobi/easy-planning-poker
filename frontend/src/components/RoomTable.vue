@@ -43,16 +43,16 @@ function getPlayerVoteDisplay(player: any) {
 
 function getPlayerVotedCardClass() {
   return votingRevealed.value
-    ? 'bg-slate-950 border-violet-500 text-violet-400 shadow-violet-500/10'
-    : 'bg-gradient-to-br from-violet-600 to-indigo-600 border-violet-400/30 text-white animate-bounce-subtle';
+    ? 'bg-slate-950 border-indigo-500 text-indigo-400 shadow-indigo-500/10'
+    : 'bg-indigo-700 border-indigo-500 text-white';
 }
 
 function getPlayerBadgeClass(player: any) {
-  return player.isOnline ? 'border-emerald-500 ring-2 ring-emerald-500/10' : 'border-slate-800 opacity-40';
+  return player.isOnline ? (player.isAdmin ? 'border-amber-500' : 'border-emerald-500') : 'border-slate-800 opacity-40';
 }
 
 function getPlayerNameClass(player: any) {
-  return player.isOnline ? 'text-slate-200' : 'text-slate-600 line-through';
+  return player.isOnline ? 'text-slate-200' : 'text-slate-700';
 }
 
 function getPlayerRoleText(player: any) {
@@ -80,8 +80,7 @@ function getPositionStyles(index: number, total: number) {
 </script>
 
 <template>
-  <div
-    class="relative w-full h-[400px] md:h-[500px] bg-slate-900/20 rounded-3xl border border-slate-800/40 p-4 overflow-hidden">
+  <div class="relative w-full h-[400px] md:h-[500px] overflow-hidden">
 
     <!-- Table Ring Center -->
     <div
@@ -101,37 +100,28 @@ function getPositionStyles(index: number, total: number) {
     <div v-for="(player, idx) in players" :key="player.userId"
       class="absolute transition-all duration-500 flex flex-col items-center gap-1.5"
       :style="getPositionStyles(idx, players.length)">
+
       <!-- Voted Card Space slot -->
       <div class="h-14 w-10 flex items-center justify-center relative">
-        <transition name="pop">
-          <div v-if="player.hasVoted && player.isOnline"
-            class="h-12 w-9 rounded-lg flex items-center justify-center font-bold text-sm shadow-md border transition-all duration-300"
-            :class="getPlayerVotedCardClass()">
-            {{ getPlayerVoteDisplay(player) }}
-          </div>
+        <div v-if="player.hasVoted && player.isOnline"
+          class="h-12 w-9 min-w-9 rounded-lg flex items-center justify-center font-bold text-sm border transition-all duration-300"
+          :class="getPlayerVotedCardClass()">
+          {{ getPlayerVoteDisplay(player) }}
+        </div>
 
-          <!-- Empty spacer when has not voted -->
-          <div v-else-if="player.isOnline"
-            class="h-12 w-9 rounded-lg border border-dashed border-slate-700 bg-slate-900/20 flex items-center justify-center text-slate-600 text-xs font-semibold">
-            -
-          </div>
-        </transition>
+        <!-- Empty spacer when has not voted -->
+        <div v-else-if="player.isOnline"
+          class="h-12 w-9 min-w-9 rounded-lg border border-dashed border-slate-700 bg-slate-900/20 flex items-center justify-center text-slate-600 text-xs font-semibold">
+        </div>
       </div>
 
       <!-- Avatar & Name details -->
       <div class="relative flex flex-col items-center">
-        <!-- Emoji Badge with online state ring -->
-        <div
-          class="w-11 h-11 rounded-full flex items-center justify-center text-2xl border bg-slate-950 relative shadow-md"
+
+        <!-- Emoji Badge with online state border -->
+        <div class="w-11 h-11 rounded-full flex items-center justify-center text-2xl border-2 relative"
           :class="getPlayerBadgeClass(player)">
           {{ player.emoji }}
-
-          <!-- Admin tag indicator -->
-          <div v-if="player.isAdmin"
-            class="absolute -top-1.5 -right-1 text-[9px] bg-amber-500 text-slate-950 px-1 rounded-full font-extrabold border border-slate-950 uppercase"
-            title="Room Admin">
-            Adm
-          </div>
         </div>
 
         <!-- Name Label -->
@@ -139,7 +129,7 @@ function getPositionStyles(index: number, total: number) {
           <div class="text-xs font-semibold truncate" :class="getPlayerNameClass(player)">
             {{ player.nickname }}
           </div>
-          <div class="text-[10px] text-slate-500">
+          <div class="text-xs text-slate-500" :class="player.isAdmin ? 'text-amber-500' : ''">
             {{ getPlayerRoleText(player) }}
           </div>
         </div>
@@ -147,36 +137,3 @@ function getPositionStyles(index: number, total: number) {
     </div>
   </div>
 </template>
-
-<style scoped>
-.animate-bounce-subtle {
-  animation: bounceSubtle 2s infinite ease-in-out;
-}
-
-@keyframes bounceSubtle {
-
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-4px);
-  }
-}
-
-.pop-enter-active,
-.pop-leave-active {
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.pop-enter-from {
-  opacity: 0;
-  transform: scale(0.6) translateY(10px);
-}
-
-.pop-leave-to {
-  opacity: 0;
-  transform: scale(0.6) translateY(-10px);
-}
-</style>

@@ -12,8 +12,8 @@ defineProps<Props>();
 </script>
 
 <template>
-  <Button :type="type || 'button'" :disabled="disabled" :size="size" variant="outline"
-    class="border-slate-800 bg-slate-950 hover:bg-slate-900 text-slate-300 hover:text-white transition-all duration-150 active:scale-[0.98]">
+  <Button :type="type || 'button'" :disabled="disabled" :size="size"
+    class="bg-transparent hover:bg-red-600/10 text-red-400 hover:text-red-300 transition-all duration-150 active:scale-[0.98]">
     <slot />
   </Button>
 </template>

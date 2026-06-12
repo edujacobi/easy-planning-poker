@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
 import { ArrowLeft, Check, Share2 } from 'lucide-vue-next';
+import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import FlexRow from './dx/FlexRow.vue';
 import OutlineButton from './dx/OutlineButton.vue';
 
@@ -20,15 +20,15 @@ function copyInviteLink() {
   setTimeout(() => isCopiedLink.value = false, 2000);
 }
 
-const inviteButtonText = computed(() => isCopiedLink.value ? 'Link Copied!' : 'Invite Players');
+const inviteButtonText = computed(() => isCopiedLink.value ? 'Link copied!' : 'Copy invite link');
 </script>
 
 <template>
-  <FlexRow justify="between" wrap class="bg-slate-900/30 border border-slate-800/40 rounded-2xl p-4 backdrop-blur-xl">
+  <FlexRow justify="between" wrap class="border border-slate-800/40 bg-slate-900/60 rounded-2xl p-4 backdrop-blur-xl">
     <FlexRow class="gap-3">
       <OutlineButton @click="router.push('/')" size="sm">
-        <ArrowLeft class="w-4 h-4 mr-2" />
-        Lobby Home
+        <ArrowLeft />
+        Return
       </OutlineButton>
 
       <div class="border-l border-slate-800 h-6"></div>
@@ -37,14 +37,14 @@ const inviteButtonText = computed(() => isCopiedLink.value ? 'Link Copied!' : 'I
         <h2 class="text-lg font-bold text-white leading-none">
           {{ roomTitle }}
         </h2>
-        <p class="text-[10px] text-slate-500 font-mono mt-1">Room ID: {{ roomId }}</p>
+        <p class="text-xs text-slate-500 font-mono mt-1">Room ID: {{ roomId }}</p>
       </div>
     </FlexRow>
 
     <FlexRow class="gap-2">
       <OutlineButton @click="copyInviteLink" size="sm">
-        <Check v-if="isCopiedLink" class="w-4 h-4 mr-2 text-emerald-400" />
-        <Share2 v-else class="w-4 h-4 mr-2 text-violet-400" />
+        <Check v-if="isCopiedLink" class="text-emerald-400" />
+        <Share2 v-else />
         {{ inviteButtonText }}
       </OutlineButton>
     </FlexRow>

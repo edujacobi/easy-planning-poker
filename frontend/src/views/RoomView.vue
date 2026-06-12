@@ -1,22 +1,18 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { useRoomStore } from '../stores/room';
-import RoomTable from '../components/RoomTable.vue';
 import CardSelection from '../components/CardSelection.vue';
-import IssuesSidebar from '../components/IssuesSidebar.vue';
-import ChatPanel from '../components/ChatPanel.vue';
-import FinishSessionModal from '../components/FinishSessionModal.vue';
-
-// DX Components
-import PageWrapper from '../components/dx/PageWrapper.vue';
+import ChatSidebar from '../components/ChatSidebar.vue';
 import FlexCol from '../components/dx/FlexCol.vue';
-
-// Subcomponents
+import PageWrapper from '../components/dx/PageWrapper.vue';
+import FinishSessionModal from '../components/FinishSessionModal.vue';
+import IssuesSidebar from '../components/IssuesSidebar.vue';
+import RoomAddStoriesComponent from '../components/RoomAddStoriesComponent.vue';
+import RoomHeaderComponent from '../components/RoomHeaderComponent.vue';
 import RoomProfileSetupComponent from '../components/RoomProfileSetupComponent.vue';
 import RoomResultsComponent from '../components/RoomResultsComponent.vue';
-import RoomHeaderComponent from '../components/RoomHeaderComponent.vue';
-import RoomAddStoriesComponent from '../components/RoomAddStoriesComponent.vue';
+import RoomTable from '../components/RoomTable.vue';
+import { useRoomStore } from '../stores/room';
 
 const route = useRoute();
 const roomStore = useRoomStore();
@@ -65,60 +61,32 @@ const endMessage = computed(() => roomStore.isAdmin ? 'Define more stories/tasks
 
 <template>
   <PageWrapper>
-    <!-- 1. Profile Setup Overlay Screen -->
     <RoomProfileSetupComponent v-if="showProfileSetup" v-model:nickname="localNickname" v-model:emoji="localEmoji"
       @submit="submitProfile" />
 
-    <!-- 2. Finished Session Dashboard Overlay -->
     <RoomResultsComponent v-else-if="roomStore.isSessionFinished"
       :sessionFinishedData="roomStore.sessionFinishedData" />
 
-    <!-- 3. Add Stories Screen Overlay -->
     <RoomAddStoriesComponent v-else-if="roomStore.sessionMode === 'add_stories'" :isAdmin="roomStore.isAdmin"
       :endMessage="endMessage" @submit="handleAddStories" @cancel="roomStore.finishSession('cancel')" />
 
-    <!-- 4. Active Estimation Workbench -->
-    <FlexCol v-else gap="6" class="max-w-8xl mx-auto">
-      <!-- Top Action bar / Header -->
+    <FlexCol v-else gap="6" class="mx-3">
       <RoomHeaderComponent :roomTitle="roomStore.room?.title" :roomId="roomStore.room?.id" />
 
-      <!-- Main Columns view Grid layout -->
-      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+      <div class="grid grid-cols-4 gap-6 items-start">
 
-        <!-- Left side: Issues -->
         <IssuesSidebar />
 
-        <!-- Center: Table & Cards Deck (Span 2) -->
-        <div class="lg:col-span-2 space-y-4">
+        <div class="col-span-2 space-y-4">
           <RoomTable />
           <CardSelection />
         </div>
 
-        <!-- Right side: Chat -->
-        <ChatPanel />
+        <ChatSidebar />
       </div>
 
     </FlexCol>
 
-    <!-- 5. Finish session check modal -->
     <FinishSessionModal />
   </PageWrapper>
 </template>
-
-<style scoped>
-.animate-fade-in {
-  animation: alertFadeIn 0.3s ease-out forwards;
-}
-
-@keyframes alertFadeIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate(-50%, 0);
-  }
-}
-</style>

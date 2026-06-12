@@ -163,11 +163,9 @@ export const useRoomStore = defineStore("room", {
 				const data = await res.json();
 				this.room = data;
 				if (this.room) {
-					const allVoted = this.room.stories.every(function (story) {
-						return story.tasks.every(function (task) {
-							return task.points !== null;
-						});
-					});
+					const allVoted = this.room.stories.every(story =>
+						story.tasks.every(task => task.points !== null)
+					);
 					if (!allVoted) {
 						this.isFinishModalDismissed = false;
 					}

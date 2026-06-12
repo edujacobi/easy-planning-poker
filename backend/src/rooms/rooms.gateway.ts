@@ -19,7 +19,7 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
-  constructor(private readonly roomsService: RoomsService) {}
+  constructor(private readonly roomsService: RoomsService) { }
 
   // Handle user connection and room registration
   async handleConnection(client: Socket) {
@@ -113,7 +113,7 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
         let countsStr = Object.entries(stats.counts)
           .map(([val, qty]) => `'${val}': ${qty} vote${qty > 1 ? 's' : ''}`)
           .join(', ');
-        
+
         if (!countsStr) countsStr = 'No votes cast';
 
         const statsMsg = `VOTE RESULTS for "${task.title}" -> Mean: ${stats.mean.toFixed(2)}, Median: ${stats.median}, Votes Breakdown: [ ${countsStr} ]`;
@@ -215,7 +215,7 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.server.to(roomId).emit('sessionStateChange', { mode: 'voting' });
     } else if (data.decision === 'finish') {
       const results = await this.roomsService.generateRoomResults(roomId);
-      
+
       // Write stats to chat
       const statsMsg = `SESSION COMPLETED! Total Stories: ${results.totalStories}, Total Points Voted: ${results.totalPoints}. Participants: ${results.participantsCount}`;
       const chatMsg = await this.roomsService.createChatMessage(
@@ -227,7 +227,7 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
         true,
       );
       this.server.to(roomId).emit('chatMessage', chatMsg);
-      
+
       // Emit session completion details to all clients
       this.server.to(roomId).emit('sessionFinished', results);
     }
@@ -250,7 +250,7 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     // Force client details reload and state sync
     this.server.to(roomId).emit('reloadRoomDetails');
     await this.broadcastRoomState(roomId);
-    
+
     // Return all players to voting mode
     this.server.to(roomId).emit('sessionStateChange', { mode: 'voting' });
   }

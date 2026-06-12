@@ -1,16 +1,15 @@
 <script setup lang="ts">
+import { Check, CheckCircle2, Eye, LayoutList } from 'lucide-vue-next';
 import { computed, ref, watch } from 'vue';
 import { useRoomStore } from '../stores/room';
-import { Button } from './ui/button';
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './ui/accordion';
-import { Input } from './ui/input';
-import { Eye, Check, CheckCircle2 } from 'lucide-vue-next';
-
-// DX Components
-import GlassCard from './dx/GlassCard.vue';
-import FlexRow from './dx/FlexRow.vue';
 import FlexCol from './dx/FlexCol.vue';
+import FlexRow from './dx/FlexRow.vue';
+import GlassCard from './dx/GlassCard.vue';
 import PrimaryButton from './dx/PrimaryButton.vue';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import ScrollArea from './ui/scroll-area/ScrollArea.vue';
 
 const roomStore = useRoomStore();
 
@@ -89,8 +88,8 @@ function getTaskClass(task: any) {
 
   return [
     isActive
-      ? 'bg-violet-600/15 border border-violet-500/30 text-violet-300 font-bold'
-      : 'bg-slate-950/30 hover:bg-slate-950/60 text-slate-400 border border-transparent',
+      ? 'bg-indigo-600/15 border border-indigo-500/30 text-indigo-300 ps-3 transition-all duration-150'
+      : 'bg-slate-950/30 hover:bg-slate-950/60 text-slate-400 border border-transparent transition-all duration-150',
     isAdmin.value ? 'cursor-pointer' : 'cursor-default'
   ];
 }
@@ -107,26 +106,33 @@ function getTaskPointsDisplay(task: any) {
 </script>
 
 <template>
-  <GlassCard class="w-full flex flex-col h-full p-4 md:p-6">
+  <GlassCard class="w-full grid grid-rows-[max-content,1fr,auto] h-full p-4 gap-1 max-h-[70dvh]">
 
     <!-- Header -->
-    <FlexRow justify="between" class="border-b border-slate-800 pb-3 mb-4">
-      <h3 class="text-lg font-bold text-white">Issues & Stories</h3>
+    <FlexRow justify="between" class="border-b border-slate-800 pb-3 mb-1">
+      <FlexRow gap="2">
+        <LayoutList class="text-indigo-400" :size="16" />
+        <h3 class="text-sm font-bold text-white">
+          Issues & Stories
+        </h3>
+      </FlexRow>
       <div v-if="checkAllTasksVoted"
-        class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-bold border border-emerald-500/20">
+        class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/20">
         <CheckCircle2 class="w-3 h-3" />
-        All Voted
+        All voted
       </div>
     </FlexRow>
 
     <!-- Stories list accordion -->
-    <div class="flex-1 overflow-y-auto pr-1 space-y-3 max-h-[350px] md:max-h-[450px]">
+    <ScrollArea class="min-h-[400px]">
       <Accordion type="multiple" class="w-full space-y-2">
         <AccordionItem v-for="story in roomStore.room?.stories" :key="story.id" :value="story.id"
           class="border border-slate-800/60 rounded-xl bg-slate-950/20 overflow-hidden">
           <AccordionTrigger class="px-3 py-2.5 hover:no-underline hover:bg-slate-950/40 text-slate-200">
             <div class="flex justify-between w-full pr-4 text-sm font-semibold">
-              <span class="truncate max-w-[150px]">{{ story.title }}</span>
+              <span class="truncate max-w-[150px]">
+                {{ story.title }}
+              </span>
               <span class="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded font-mono">
                 {{ getStoryTotalPoints(story.id) }} pts
               </span>
@@ -138,7 +144,7 @@ function getTaskPointsDisplay(task: any) {
               class="p-2 rounded-lg text-xs transition duration-200 select-none" :class="getTaskClass(task)">
               <FlexCol gap="1" class="max-w-[70%]">
                 <span class="truncate text-slate-200">{{ task.title }}</span>
-                <span class="text-[11px] text-slate-500 font-mono">
+                <span class="text-xs text-slate-500 font-mono">
                   {{ getTaskStatusLabel(task) }}
                 </span>
               </FlexCol>
@@ -150,30 +156,30 @@ function getTaskPointsDisplay(task: any) {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-    </div>
+    </ScrollArea>
 
     <!-- Admin Panel Controls -->
-    <div v-if="isAdmin" class="mt-6 border-t border-slate-800 pt-4 space-y-4">
+    <FlexCol v-if="isAdmin" class="mt-1 pt-3 border-t border-slate-800 space-y-3">
       <div class="text-xs uppercase tracking-wider text-slate-500 font-semibold">
-        Admin Controls
+        Admin controls
       </div>
 
       <!-- Task voting state decisions -->
       <div v-if="activeTask" class="space-y-3">
         <!-- 1. Reveal Votes -->
         <PrimaryButton v-if="!votingRevealed" @click="revealVotes" class="w-full font-medium">
-          <Eye class="w-4 h-4 mr-2" />
-          Reveal Player Votes
+          <Eye />
+          Reveal votes
         </PrimaryButton>
 
         <!-- 2. Point confirmation (displayed only after votes are revealed) -->
         <div v-else class="space-y-2 p-3 bg-slate-950/60 rounded-xl border border-slate-800">
-          <label class="text-[11px] font-semibold text-slate-400">Confirm Story Points for Task:</label>
+          <label class="text-xs font-semibold text-slate-400">Confirm Story points for Task:</label>
           <FlexRow gap="2">
-            <Input v-model="confirmedPointsInput" placeholder="e.g. 3, 5, or empty for skipped"
-              class="bg-slate-950 border-slate-800 text-slate-100 text-xs h-9 focus:border-violet-500" />
-            <Button @click="confirmPoints" size="sm" class="bg-emerald-600 hover:bg-emerald-500 text-white shrink-0">
-              <Check class="w-4 h-4" />
+            <Input v-model="confirmedPointsInput" placeholder="e.g. 3, 5, or empty for skipped" class="text-xs h-9" />
+            <Button @click="confirmPoints" size="icon-sm"
+              class="bg-emerald-600 hover:bg-emerald-500 text-white shrink-0">
+              <Check />
             </Button>
           </FlexRow>
         </div>
@@ -182,8 +188,8 @@ function getTaskPointsDisplay(task: any) {
       <!-- Finish session if all tasks voted -->
       <Button v-if="checkAllTasksVoted" @click="triggerFinishSession"
         class="w-full bg-emerald-600 hover:bg-emerald-500 text-white">
-        Finish Active Session
+        Finish active session
       </Button>
-    </div>
+    </FlexCol>
   </GlassCard>
 </template>
