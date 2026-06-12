@@ -1,10 +1,17 @@
 <script setup lang="ts">
-import { FileText, Plus } from 'lucide-vue-next';
-import { computed } from 'vue';
-import { useRoomStore } from '../stores/room';
-import OutlineButton from './dx/OutlineButton.vue';
-import PrimaryButton from './dx/PrimaryButton.vue';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog';
+import { FileText, Plus } from "lucide-vue-next";
+import { computed } from "vue";
+import { useRoomStore } from "../stores/room";
+import OutlineButton from "./dx/OutlineButton.vue";
+import PrimaryButton from "./dx/PrimaryButton.vue";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "./ui/dialog";
 
 const roomStore = useRoomStore();
 
@@ -14,7 +21,11 @@ const isOpen = computed(function () {
 		return false;
 	}
 
-	if (!roomStore.isAdmin || roomStore.sessionMode === 'add_stories' || roomStore.isSessionFinished) {
+	if (
+		!roomStore.isAdmin ||
+		roomStore.sessionMode === "add_stories" ||
+		roomStore.isSessionFinished
+	) {
 		return false;
 	}
 
@@ -28,27 +39,37 @@ const isOpen = computed(function () {
 });
 
 function selectAddStories() {
-	roomStore.finishSession('add_stories');
+	roomStore.finishSession("add_stories");
 }
 
 function selectFinish() {
-	roomStore.finishSession('finish');
+	roomStore.finishSession("finish");
 }
 
 function dismissModal() {
 	roomStore.isFinishModalDismissed = true;
 }
+
+function onOpenChange(val: boolean) {
+	if (!val) {
+		dismissModal();
+	}
+}
 </script>
 
 <template>
-	<Dialog :open="isOpen">
+	<Dialog
+		:open="isOpen"
+		@update:open="onOpenChange"
+	>
 		<DialogContent>
 			<DialogHeader>
 				<DialogTitle>
 					Finish session?
 				</DialogTitle>
 				<DialogDescription>
-					All stories and tasks in this room have been estimated. What would you like to do next?
+					All stories and tasks in this room have been estimated. What
+					would you like to do next?
 				</DialogDescription>
 			</DialogHeader>
 

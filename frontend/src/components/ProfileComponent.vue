@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import AvatarSelection from './AvatarSelection.vue';
-import GlassCard from './dx/GlassCard.vue';
-import { CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
+import AvatarSelection from "./AvatarSelection.vue";
+import GlassCard from "./dx/GlassCard.vue";
+import { CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
-const nickname = defineModel<string>('nickname', { required: true });
-const selectedEmoji = defineModel<string>('selectedEmoji', { required: true });
-
+const nickname = defineModel<string>("nickname", { required: true });
+const selectedEmoji = defineModel<string>("selectedEmoji", { required: true });
 </script>
 
 <template>
@@ -20,7 +19,10 @@ const selectedEmoji = defineModel<string>('selectedEmoji', { required: true });
 		</CardHeader>
 
 		<CardContent>
-			<AvatarSelection v-model:nickname="nickname" v-model:emoji="selectedEmoji" />
+			<AvatarSelection
+				v-model:nickname="nickname"
+				v-model:emoji="selectedEmoji"
+			/>
 		</CardContent>
 	</GlassCard>
 </template>
