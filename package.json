@@ -7,13 +7,9 @@
     "bootstrap": "npm run install:backend && npm run install:frontend",
     "install:backend": "npm install --prefix backend",
     "install:frontend": "npm install --prefix frontend",
-    "start": "pm2 start ecosystem.config.js",
-    "stop": "pm2 stop ecosystem.config.js",
-    "status": "pm2 status",
-    "logs": "pm2 logs",
-    "dev": "pm2 start ecosystem.config.js --no-daemon"
+    "dev": "concurrently -k \"npm run start:dev --prefix backend\" \"npm run dev --prefix frontend\""
   },
-  "dependencies": {
-    "pm2": "^5.3.1"
+  "devDependencies": {
+    "concurrently": "^10.0.3"
   }
 }

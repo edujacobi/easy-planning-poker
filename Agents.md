@@ -63,6 +63,6 @@ The frontend utilizes a modern dark/glassmorphic design language:
 
 ---
 
-> [!TIP]
 > **To start the complete development environment:**
-> Run `npm run dev` at the root of the project. This will boot both backend and frontend using PM2.
+> Run `npm run dev` at the root of the project. This will boot both backend and frontend concurrently.
+
