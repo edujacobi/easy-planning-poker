@@ -1,6 +1,10 @@
 import { defineStore } from "pinia";
 import io, { type Socket } from "socket.io-client";
 
+const BACKEND_URL = import.meta.env.DEV
+	? "http://localhost:3000"
+	: window.location.origin;
+
 export interface UserProfile {
 	userId: string;
 	nickname: string;
@@ -137,7 +141,7 @@ export const useRoomStore = defineStore("room", {
 
 			try {
 				if (!this.user) this.loadUser();
-				const res = await fetch("http://localhost:3000/api/rooms", {
+				const res = await fetch(`${BACKEND_URL}/api/rooms`, {
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify({
@@ -165,9 +169,7 @@ export const useRoomStore = defineStore("room", {
 		// HTTP: Fetch Room Details
 		async fetchRoomDetails(roomId: string) {
 			try {
-				const res = await fetch(
-					`http://localhost:3000/api/rooms/${roomId}`,
-				);
+				const res = await fetch(`${BACKEND_URL}/api/rooms/${roomId}`);
 
 				if (!res.ok) throw new Error("Failed to load room details");
 				const data = await res.json();
@@ -192,7 +194,7 @@ export const useRoomStore = defineStore("room", {
 		async fetchChatHistory(roomId: string) {
 			try {
 				const res = await fetch(
-					`http://localhost:3000/api/rooms/${roomId}/chat`,
+					`${BACKEND_URL}/api/rooms/${roomId}/chat`,
 				);
 
 				if (!res.ok) throw new Error("Failed to load chat history");
@@ -215,7 +217,7 @@ export const useRoomStore = defineStore("room", {
 			await this.fetchChatHistory(roomId);
 
 			// Connect to root socket namespace
-			this.socket = io("http://localhost:3000", {
+			this.socket = io(BACKEND_URL, {
 				query: {
 					userId: this.user?.userId || "",
 					nickname: this.user?.nickname || "",
