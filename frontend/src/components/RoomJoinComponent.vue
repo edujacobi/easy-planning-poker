@@ -7,13 +7,13 @@ import FlexCol from "./dx/FlexCol.vue";
 import FlexRow from "./dx/FlexRow.vue";
 import FormGroup from "./dx/FormGroup.vue";
 import GlassCard from "./dx/GlassCard.vue";
+import Grid from "./dx/Grid.vue";
 import PrimaryButton from "./dx/PrimaryButton.vue";
+import SelectableItem from "./dx/SelectableItem.vue";
+import SwitchButton from "./dx/SwitchButton.vue";
 import StoryTaskAdder from "./StoryTaskAdder.vue";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import Grid from "./dx/Grid.vue";
-import SelectableItem from "./dx/SelectableItem.vue";
-import SwitchButton from "./dx/SwitchButton.vue";
 
 const emit = defineEmits<{
 	(e: "join-room", roomId: string): void;
@@ -77,27 +77,18 @@ function showAlert(msg: string) {
 
 function joinRoom() {
 	const id = roomIdToJoin.value.trim();
-	if (!id) {
-		return showAlert("Please enter a Room ID.");
-	}
+	if (!id) return showAlert("Please enter a Room ID.");
 
 	emit("join-room", id);
 }
 
 
 function createRoom() {
-	if (!roomTitle.value.trim()) {
-		return showAlert("Please enter a Room Title.");
-	}
+	if (!roomTitle.value.trim()) return showAlert("Please enter a Room Title.");
 
-	if (
-		stories.value.length === 0 ||
-		stories.value.some((s) => s.tasks.length === 0)
-	) {
-		return showAlert(
-			"Please ensure you have at least one story and every story has at least one task.",
-		);
-	}
+	const canCreateRoom = stories.value.length > 0 && stories.value.every((s) => s.tasks.length > 0);
+
+	if (!canCreateRoom) return showAlert("Please ensure you have at least one story and every story has at least one task.");
 
 	emit("create-room", {
 		title: roomTitle.value.trim(),

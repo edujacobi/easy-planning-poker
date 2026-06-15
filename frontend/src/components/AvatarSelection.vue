@@ -73,7 +73,7 @@ const emit = defineEmits<{
 		</FlexCol>
 
 		<FlexCol>
-			<div class="flex flex-wrap gap-1 justify-center md:justify-start">
+			<div class="flex flex-wrap gap-1 justify-start">
 				<SelectableItem
 					v-for="emoji in emojis"
 					:key="emoji"

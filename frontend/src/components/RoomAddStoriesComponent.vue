@@ -35,7 +35,7 @@ function showAlert(msg: string) {
 
 function handleSubmit() {
 	const canSubmit = newStories.value.length > 0 &&
-		newStories.value.some((s) => s.tasks.length > 0);
+		newStories.value.every((s) => s.tasks.length > 0);
 	
 	if (!canSubmit) {
 		showAlert("Please enter at least one story and verify all stories contain tasks.");

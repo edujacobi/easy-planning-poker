@@ -3,6 +3,7 @@ import { ArrowLeft, Check, Share2 } from "lucide-vue-next";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import FlexRow from "./dx/FlexRow.vue";
+import GlassCard from "./dx/GlassCard.vue";
 import OutlineButton from "./dx/OutlineButton.vue";
 
 defineProps<{
@@ -26,10 +27,8 @@ const inviteButtonText = computed(() =>
 </script>
 
 <template>
-	<FlexRow
-		justify="between"
-		wrap
-		class="border border-slate-800/40 bg-slate-900/60 rounded-2xl p-4 backdrop-blur-xl"
+	<GlassCard
+		class="p-4 flex-row flex-wrap justify-between"
 	>
 		<FlexRow class="gap-3">
 			<OutlineButton
@@ -40,7 +39,7 @@ const inviteButtonText = computed(() =>
 				Return
 			</OutlineButton>
 
-			<div class="border-l border-slate-800 h-6"></div>
+			<span class="border-l border-slate-800/60 h-6"></span>
 
 			<div>
 				<h2 class="text-lg font-bold text-white leading-none">
@@ -65,5 +64,5 @@ const inviteButtonText = computed(() =>
 				{{ inviteButtonText }}
 			</OutlineButton>
 		</FlexRow>
-	</FlexRow>
+	</GlassCard>
 </template>

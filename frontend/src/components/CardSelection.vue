@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import { useRoomStore } from "../stores/room";
+import FlexCol from "./dx/FlexCol.vue";
+import FlexRow from "./dx/FlexRow.vue";
 
 const roomStore = useRoomStore();
 
@@ -11,7 +13,7 @@ const cardOptions = computed(() => {
 	if (roomStore.room?.voteType === "linear") {
 		return ["0", "1", "2", "3", "4", "5", "6", "7", "8", "?"];
 	}
-	return ["0", "1", "2", "3", "5", "8", "13", "?"];
+	return ["0", "1", "2", "3", "5", "8", "13", "21", "?"];
 });
 
 // Watch activeTaskId: reset vote card highlights if the task changes
@@ -75,16 +77,19 @@ function getCardClass(card: string) {
 </script>
 
 <template>
-	<div class="w-full flex flex-col items-center gap-3 py-4 mt-2">
-		<div
-			class="text-slate-400 text-xs font-semibold uppercase tracking-wider"
-		>
+	<FlexCol
+		align="center"
+		gap="4"
+	>
+		<p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">
 			{{ chooseCardLabel }}
-		</div>
+		</p>
 
 		<!-- Cards container -->
-		<div
-			class="flex flex-wrap gap-2 md:gap-3 justify-center items-center px-4 max-w-3xl"
+		<FlexRow
+			gap="3"
+			wrap
+			align="center"
 		>
 			<button
 				v-for="card in cardOptions"
@@ -97,8 +102,8 @@ function getCardClass(card: string) {
 			>
 				{{ card }}
 			</button>
-		</div>
-	</div>
+		</FlexRow>
+	</FlexCol>
 </template>
 
 <style scoped>

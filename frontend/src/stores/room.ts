@@ -82,10 +82,12 @@ export const useRoomStore = defineStore("room", {
 		},
 		activeTask(state): TaskItem | null {
 			if (!state.room || !state.activeTaskId) return null;
+
 			for (const story of state.room.stories) {
 				const task = story.tasks.find(
 					(t) => t.id === state.activeTaskId,
 				);
+
 				if (task) return task;
 			}
 			return null;
@@ -117,6 +119,7 @@ export const useRoomStore = defineStore("room", {
 			if (!this.user) return;
 			if (nickname !== undefined) this.user.nickname = nickname;
 			if (emoji !== undefined) this.user.emoji = emoji;
+
 			localStorage.setItem(
 				"planning_poker_user",
 				JSON.stringify(this.user),
@@ -131,6 +134,7 @@ export const useRoomStore = defineStore("room", {
 		): Promise<string> {
 			this.isLoading = true;
 			this.error = null;
+
 			try {
 				if (!this.user) this.loadUser();
 				const res = await fetch("http://localhost:3000/api/rooms", {
@@ -148,6 +152,7 @@ export const useRoomStore = defineStore("room", {
 
 				if (!res.ok) throw new Error("Failed to create room");
 				const data = await res.json();
+
 				return data.id;
 			} catch (err: unknown) {
 				this.error = (err as Error).message;
@@ -163,13 +168,16 @@ export const useRoomStore = defineStore("room", {
 				const res = await fetch(
 					`http://localhost:3000/api/rooms/${roomId}`,
 				);
+
 				if (!res.ok) throw new Error("Failed to load room details");
 				const data = await res.json();
 				this.room = data;
+
 				if (this.room) {
 					const allVoted = this.room.stories.every((story) =>
 						story.tasks.every((task) => task.points !== null),
 					);
+
 					if (!allVoted) {
 						this.isFinishModalDismissed = false;
 					}
@@ -186,6 +194,7 @@ export const useRoomStore = defineStore("room", {
 				const res = await fetch(
 					`http://localhost:3000/api/rooms/${roomId}/chat`,
 				);
+
 				if (!res.ok) throw new Error("Failed to load chat history");
 				this.chatMessages = await res.json();
 			} catch (err: unknown) {
@@ -256,6 +265,7 @@ export const useRoomStore = defineStore("room", {
 				this.socket.disconnect();
 				this.socket = null;
 			}
+
 			this.room = null;
 			this.players = [];
 			this.activeTaskId = null;

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { Check, CheckCircle2, Eye, LayoutList } from "lucide-vue-next";
 import { computed, ref, watch } from "vue";
-import { useRoomStore } from "../stores/room";
+import { useRoomStore, type StoryItem } from "../stores/room";
+import Divider from "./dx/Divider.vue";
 import FlexCol from "./dx/FlexCol.vue";
 import FlexRow from "./dx/FlexRow.vue";
 import GlassCard from "./dx/GlassCard.vue";
@@ -14,8 +15,8 @@ import {
 } from "./ui/accordion";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 import ScrollArea from "./ui/scroll-area/ScrollArea.vue";
-import Divider from "./dx/Divider.vue";
 
 const roomStore = useRoomStore();
 
@@ -83,6 +84,10 @@ const checkAllTasksVoted = computed(() => {
 	);
 });
 
+function checkAllTasksVotedFromStory(story: StoryItem) {
+	return story.tasks.every((task) => task.points !== null);
+}
+
 // Trigger Finish Session flow
 function triggerFinishSession() {
 	if (!isAdmin.value) return;
@@ -129,13 +134,14 @@ function getTaskPointsDisplay(task: any) {
 						Issues & Stories
 					</h3>
 				</FlexRow>
-				<div
+				<FlexRow
 					v-if="checkAllTasksVoted"
-					class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/20"
+					align="center"
+					class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/20"
 				>
 					<CheckCircle2 class="w-3 h-3" />
 					All voted
-				</div>
+				</FlexRow>
 			</FlexRow>
 			<Divider/>
 		</FlexCol>
@@ -156,18 +162,27 @@ function getTaskPointsDisplay(task: any) {
 					<AccordionTrigger
 						class="px-3 py-2.5 hover:no-underline hover:bg-slate-950/40 text-slate-200"
 					>
-						<div
-							class="flex justify-between w-full pr-4 text-sm font-semibold"
+						<FlexRow
+							justify="between"
+							class="w-full pr-2 text-sm font-semibold"
 						>
 							<span class="truncate max-w-[150px]">
 								{{ story.title }}
 							</span>
-							<span
-								class="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded font-mono"
+							<FlexRow
+								class="text-xs px-2 py-0.5 rounded-full font-mono"
+								:class="checkAllTasksVotedFromStory(story) ? 
+									'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 
+									'bg-slate-800 text-slate-400'
+								"
 							>
+								<CheckCircle2
+									v-if="checkAllTasksVotedFromStory(story)"
+									class="w-3 h-3"
+								/>
 								{{ getStoryTotalPoints(story.id) }} pts
-							</span>
-						</div>
+							</FlexRow>
+						</FlexRow>
 					</AccordionTrigger>
 					<AccordionContent
 						class="px-3 pt-1 pb-3 space-y-1.5 border-t border-slate-950"
@@ -185,9 +200,9 @@ function getTaskPointsDisplay(task: any) {
 								gap="1"
 								class="max-w-[70%]"
 							>
-								<span class="truncate text-slate-200">{{
-									task.title
-								}}</span>
+								<span class="truncate text-slate-200">
+									{{ task.title }}
+								</span>
 								<span class="text-xs text-slate-500 font-mono">
 									{{ getTaskStatusLabel(task) }}
 								</span>
@@ -203,20 +218,19 @@ function getTaskPointsDisplay(task: any) {
 		</ScrollArea>
 
 		<!-- Admin Panel Controls -->
+		<Divider/>
 		<FlexCol
 			v-if="isAdmin"
-			class="mt-1 pt-3 border-t border-slate-800 space-y-3"
+			class="space-y-3"
 		>
-			<div
-				class="text-xs uppercase tracking-wider text-slate-500 font-semibold"
-			>
+			<p class="text-xs uppercase tracking-wider text-slate-500 font-semibold">
 				Admin controls
-			</div>
+			</p>
 
 			<!-- Task voting state decisions -->
-			<div
+			<FlexCol
 				v-if="activeTask"
-				class="space-y-3"
+				gap="3"
 			>
 				<!-- 1. Reveal Votes -->
 				<PrimaryButton
@@ -229,13 +243,10 @@ function getTaskPointsDisplay(task: any) {
 				</PrimaryButton>
 
 				<!-- 2. Point confirmation (displayed only after votes are revealed) -->
-				<div
-					v-else
-					class="space-y-2 p-3 bg-slate-950/60 rounded-xl border border-slate-800"
-				>
-					<label class="text-xs font-semibold text-slate-400">
+				<FlexCol v-else>
+					<Label>
 						Confirm Story points for Task:
-					</label>
+					</Label>
 					<FlexRow>
 						<Input
 							v-model="confirmedPointsInput"
@@ -250,8 +261,8 @@ function getTaskPointsDisplay(task: any) {
 							<Check />
 						</Button>
 					</FlexRow>
-				</div>
-			</div>
+				</FlexCol>
+			</FlexCol>
 
 			<!-- Finish session if all tasks voted -->
 			<Button
