@@ -13,10 +13,10 @@ const props = defineProps<Props>();
 		class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3.5"
 	>
 		<div class="text-slate-500 text-xs font-bold uppercase tracking-wider">
-			{{ title }}
+			{{ props.title }}
 		</div>
 		<div class="text-white text-xl md:text-2xl font-extrabold mt-1">
-			{{ value }}
+			{{ props.value }}
 		</div>
 	</div>
 </template>

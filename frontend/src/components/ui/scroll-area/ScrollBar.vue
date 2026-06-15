@@ -10,6 +10,7 @@ const props = withDefaults(
 		ScrollAreaScrollbarProps & { class?: HTMLAttributes["class"] }
 	>(),
 	{
+		class: "",
 		orientation: "vertical",
 	},
 );
@@ -20,7 +21,7 @@ const delegatedProps = reactiveOmit(props, "class");
 <template>
 	<ScrollAreaScrollbar
 		data-slot="scroll-area-scrollbar"
-		:data-orientation="orientation"
+		:data-orientation="props.orientation"
 		v-bind="delegatedProps"
 		:class="
 			cn(

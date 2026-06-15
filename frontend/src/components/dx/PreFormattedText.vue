@@ -10,7 +10,7 @@ const props = defineProps<{
 		<pre
 			class="text-xs font-mono text-slate-400 whitespace-pre-wrap leading-relaxed"
 		>
-							{{ markdownContent }}
-						</pre>
+			{{ props.markdownContent }}
+		</pre>
 	</div>
 </template>

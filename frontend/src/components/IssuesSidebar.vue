@@ -15,6 +15,7 @@ import {
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import ScrollArea from "./ui/scroll-area/ScrollArea.vue";
+import Divider from "./dx/Divider.vue";
 
 const roomStore = useRoomStore();
 
@@ -117,27 +118,28 @@ function getTaskPointsDisplay(task: any) {
 		class="w-full grid grid-rows-[max-content,1fr,auto] h-full p-4 gap-1 max-h-[70dvh]"
 	>
 		<!-- Header -->
-		<FlexRow
-			justify="between"
-			class="border-b border-slate-800 pb-3 mb-1"
-		>
-			<FlexRow gap="2">
-				<LayoutList
-					class="text-indigo-400"
-					:size="16"
-				/>
-				<h3 class="text-sm font-bold text-white">
-					Issues & Stories
-				</h3>
+		<FlexCol>
+			<FlexRow justify="between">
+				<FlexRow>
+					<LayoutList
+						class="text-indigo-400"
+						:size="16"
+					/>
+					<h3 class="text-sm font-bold text-white">
+						Issues & Stories
+					</h3>
+				</FlexRow>
+				<div
+					v-if="checkAllTasksVoted"
+					class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/20"
+				>
+					<CheckCircle2 class="w-3 h-3" />
+					All voted
+				</div>
 			</FlexRow>
-			<div
-				v-if="checkAllTasksVoted"
-				class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/20"
-			>
-				<CheckCircle2 class="w-3 h-3" />
-				All voted
-			</div>
-		</FlexRow>
+			<Divider/>
+		</FlexCol>
+
 
 		<!-- Stories list accordion -->
 		<ScrollArea class="min-h-[400px]">
@@ -234,7 +236,7 @@ function getTaskPointsDisplay(task: any) {
 					<label class="text-xs font-semibold text-slate-400">
 						Confirm Story points for Task:
 					</label>
-					<FlexRow gap="2">
+					<FlexRow>
 						<Input
 							v-model="confirmedPointsInput"
 							placeholder="e.g. 3, 5, or empty for skipped"

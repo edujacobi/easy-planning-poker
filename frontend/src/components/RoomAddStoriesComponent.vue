@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { AlertTriangle, Plus, Trash2 } from "lucide-vue-next";
 import { ref } from "vue";
+import Alert from "../components/dx/Alert.vue";
+import StoryTaskAdder from "./StoryTaskAdder.vue";
+import Divider from "./dx/Divider.vue";
 import FlexRow from "./dx/FlexRow.vue";
 import GlassCard from "./dx/GlassCard.vue";
 import OutlineButton from "./dx/OutlineButton.vue";
 import PrimaryButton from "./dx/PrimaryButton.vue";
-import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import { Input } from "./ui/input";
+import Spinner from "./dx/Spinner.vue";
 
 const props = defineProps<{
 	isAdmin: boolean;
@@ -27,44 +28,17 @@ const alertMessage = ref("");
 
 function showAlert(msg: string) {
 	alertMessage.value = msg;
-	setTimeout(function () {
-		if (alertMessage.value === msg) {
-			alertMessage.value = "";
-		}
-	}, 4000);
-}
-
-function addStoryForm() {
-	newStories.value.push({
-		title: `New Story ${newStories.value.length + 1}`,
-		tasks: ["Task 1"],
-	});
-}
-
-function removeStoryForm(idx: number) {
-	newStories.value.splice(idx, 1);
-}
-
-function addTaskForm(storyIdx: number) {
-	newStories.value[storyIdx].tasks.push(
-		`Task ${newStories.value[storyIdx].tasks.length + 1}`,
-	);
-}
-
-function removeTaskForm(storyIdx: number, taskIdx: number) {
-	newStories.value[storyIdx].tasks.splice(taskIdx, 1);
+	setTimeout(() => {
+		if (alertMessage.value === msg) alertMessage.value = "";
+	}, 10_000);
 }
 
 function handleSubmit() {
-	if (
-		newStories.value.length === 0 ||
-		newStories.value.some(function (s) {
-			return s.tasks.length === 0;
-		})
-	) {
-		showAlert(
-			"Please enter at least one story and verify all stories contain tasks.",
-		);
+	const canSubmit = newStories.value.length > 0 &&
+		newStories.value.some((s) => s.tasks.length > 0);
+	
+	if (!canSubmit) {
+		showAlert("Please enter at least one story and verify all stories contain tasks.");
 		return;
 	}
 
@@ -78,146 +52,59 @@ function handleSubmit() {
 	<div
 		class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center z-50 p-4"
 	>
-		<!-- Floating Alert -->
-		<div
-			v-if="alertMessage"
-			class="fixed top-4 left-1/2 -translate-x-1/2 z-[60] w-full max-w-md px-4 alert-fade-in"
-		>
-			<Alert
-				variant="destructive"
-				class="bg-slate-950/95 border-red-500/50 text-red-200 backdrop-blur-md shadow-2xl flex items-start gap-3"
-			>
-				<AlertTriangle class="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
-				<div class="flex-1">
-					<AlertTitle
-						class="flex items-center justify-between text-sm font-semibold"
-					>
-						<span>Warning</span>
-						<button
-							class="text-xs hover:text-white underline opacity-70 hover:opacity-100"
-							@click="alertMessage = ''"
-						>
-							Dismiss
-						</button>
-					</AlertTitle>
-					<AlertDescription class="text-xs text-red-300 mt-1">
-						{{ alertMessage }}
-					</AlertDescription>
-				</div>
-			</Alert>
-		</div>
-
+		<Alert
+			:alertMessage="alertMessage"
+			variant="destructive"
+			@close="alertMessage = ''"
+		/>
+		
 		<GlassCard
-			class="w-full max-w-xl shadow-2xl max-h-[85vh] overflow-y-auto flex flex-col"
+			class="w-full max-w-xl max-h-[85vh] overflow-y-auto flex flex-col"
 		>
-			<CardHeader class="border-b border-slate-800">
+			<CardHeader>
 				<CardTitle>
 					Add more Stories and Tasks
 				</CardTitle>
 				<CardDescription>
-					{{ endMessage }}
+					{{ props.endMessage }}
 				</CardDescription>
 			</CardHeader>
 
-			<CardContent class="flex-1 p-6">
+			<Divider/>
+
+			<CardContent class="flex-1 px-6">
 				<!-- Non-Admin waiting screen -->
-				<div
-					v-if="!isAdmin"
-					class="text-center py-10 space-y-3"
+				<section
+					v-if="!props.isAdmin"
+					class="text-center py-6 space-y-3"
 				>
-					<div
-						class="w-10 h-10 rounded-full border-t-2 border-violet-500 animate-spin mx-auto"
-					></div>
+					<Spinner borderColor="amber" />
 					<p class="text-sm text-slate-400">
-						Admin is currently adding more histories to estimation
+						Admin is currently adding more Stories to estimation
 						backlog...
 					</p>
-				</div>
+				</section>
 
 				<!-- Admin Add stories form list -->
-				<div
+				<StoryTaskAdder
 					v-else
-					class="space-y-4"
-				>
-					<FlexRow
-						justify="between"
-						class="pb-2"
-					>
-						<span class="text-xs font-semibold text-slate-400">New Stories Checklist:</span>
-						<OutlineButton
-							size="sm"
-							class="h-8"
-							@click="addStoryForm"
-						>
-							<Plus class="w-3.5 h-3.5 mr-1" /> Add Story
-						</OutlineButton>
-					</FlexRow>
-
-					<div class="space-y-3 max-h-[40vh] overflow-y-auto pr-1">
-						<div
-							v-for="(story, sIdx) in newStories"
-							:key="sIdx"
-							class="p-4 rounded-xl border border-slate-800 bg-slate-950/40 space-y-3 relative"
-						>
-							<FlexRow>
-								<Input
-									v-model="story.title"
-									placeholder="Story Title..."
-									class="text-sm h-8"
-								/>
-								<button
-									type="button"
-									class="text-slate-500 hover:text-red-400 transition shrink-0"
-									@click="removeStoryForm(sIdx)"
-								>
-									<Trash2 />
-								</button>
-							</FlexRow>
-
-							<!-- Nested tasks -->
-							<div
-								class="pl-4 space-y-2 border-l border-slate-800"
-							>
-								<FlexRow
-									v-for="(_, tIdx) in story.tasks"
-									:key="tIdx"
-								>
-									<Input
-										v-model="story.tasks[tIdx]"
-										placeholder="Task Title..."
-										class="text-xs h-7"
-									/>
-									<button
-										type="button"
-										class="text-slate-500 hover:text-red-400 transition shrink-0"
-										@click="removeTaskForm(sIdx, tIdx)"
-									>
-										<Trash2 class="w-3.5 h-3.5" />
-									</button>
-								</FlexRow>
-
-								<button
-									type="button"
-									class="text-xs text-violet-400 hover:text-violet-300 flex items-center mt-1"
-									@click="addTaskForm(sIdx)"
-								>
-									<Plus class="w-3 h-3 mr-1" /> Add Task
-								</button>
-							</div>
-						</div>
-					</div>
-				</div>
+					label="New Stories"
+					:stories="newStories"
+					class="py-2"
+				/>
 			</CardContent>
+			
+			<Divider/>
 
 			<FlexRow
-				v-if="isAdmin"
-				class="p-6 border-t border-slate-800 gap-2"
+				v-if="props.isAdmin"
+				class="px-3 gap-3"
 			>
 				<PrimaryButton
-					class="flex-1 py-5"
+					class="flex-1"
 					@click="handleSubmit"
 				>
-					Append Backlog Stories
+					Append backlog Stories
 				</PrimaryButton>
 				<OutlineButton @click="emit('cancel')">
 					Cancel
@@ -226,21 +113,3 @@ function handleSubmit() {
 		</GlassCard>
 	</div>
 </template>
-
-<style scoped>
-.alert-fade-in {
-	animation: alertFadeIn 0.3s ease-out forwards;
-}
-
-@keyframes alertFadeIn {
-	from {
-		opacity: 0;
-		transform: translate(-50%, -10px);
-	}
-
-	to {
-		opacity: 1;
-		transform: translate(-50%, 0);
-	}
-}
-</style>

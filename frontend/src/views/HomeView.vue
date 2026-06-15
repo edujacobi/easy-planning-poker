@@ -24,7 +24,7 @@ function showAlert(msg: string) {
 
 	setTimeout(() => {
 		if (alertMessage.value === msg) alertMessage.value = "";
-	}, 5_000);
+	}, 10_000);
 }
 
 onMounted(() => {
@@ -76,7 +76,6 @@ async function handleCreateRoom(payload: {
 
 <template>
 	<PageWrapper>
-		<!-- Floating Alert -->
 		<Alert
 			:alertMessage="alertMessage"
 			variant="destructive"
@@ -89,20 +88,17 @@ async function handleCreateRoom(payload: {
 			gap="8"
 			class="min-h-[85vh] w-full pt-10 scrollbar-gutter-stable"
 		>
-			<!-- Title header -->
 			<HeaderComponent />
 
 			<FlexCol
 				gap="6"
 				class="w-full max-w-2xl"
 			>
-				<!-- Profile setup box -->
 				<ProfileComponent
 					v-model:nickname="nickname"
 					v-model:selectedEmoji="selectedEmoji"
 				/>
 
-				<!-- Join / Create Navigation tabs -->
 				<RoomJoinComponent
 					@join-room="handleJoinRoom"
 					@create-room="handleCreateRoom"

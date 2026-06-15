@@ -8,6 +8,7 @@ const props = withDefaults(
 		size?: "default" | "sm";
 	}>(),
 	{
+		class: "",
 		size: "default",
 	},
 );
@@ -16,7 +17,7 @@ const props = withDefaults(
 <template>
 	<div
 		data-slot="card"
-		:data-size="size"
+		:data-size="props.size"
 		:class="
 			cn(
 				'bg-card text-card-foreground gap-4 overflow-hidden rounded-xl py-4 text-sm border has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl group/card flex flex-col',

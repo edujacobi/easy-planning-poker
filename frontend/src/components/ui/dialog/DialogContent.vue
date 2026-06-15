@@ -22,6 +22,7 @@ defineOptions({
 const props = withDefaults(
 	defineProps<
 		DialogContentProps & {
+			// eslint-disable-next-line vue/require-default-prop
 			class?: HTMLAttributes["class"];
 			showCloseButton?: boolean;
 		}

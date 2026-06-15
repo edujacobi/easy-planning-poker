@@ -2,12 +2,15 @@
 import { Send, Users } from "lucide-vue-next";
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { useRoomStore } from "../stores/room.ts";
-import FlexCol from "./dx/FlexCol.vue";
+import ChatMessageSystem from "./dx/ChatMessageSystem.vue";
+import ChatMessageUser from "./dx/ChatMessageUser.vue";
 import FlexRow from "./dx/FlexRow.vue";
+import FlexCol from "./dx/FlexCol.vue";
 import GlassCard from "./dx/GlassCard.vue";
 import PrimaryButton from "./dx/PrimaryButton.vue";
 import { Input } from "./ui/input/index.ts";
 import { ScrollArea } from "./ui/scroll-area/index.ts";
+import Divider from "./dx/Divider.vue";
 
 const roomStore = useRoomStore();
 const typedMessage = ref("");
@@ -50,10 +53,7 @@ onMounted(() => {
 <template>
 	<GlassCard class="w-full flex flex-col h-full p-4 gap-1 max-h-[70dvh]">
 		<!-- Title header -->
-		<FlexRow
-			gap="2"
-			class="border-b border-slate-800 pb-3 mb-1"
-		>
+		<FlexRow>
 			<Users
 				class="text-indigo-400"
 				:size="16"
@@ -63,9 +63,11 @@ onMounted(() => {
 			</h3>
 		</FlexRow>
 
+		<Divider/>
+
 		<!-- Message View Box -->
 		<ScrollArea class="flex-1 min-h-[220px]">
-			<div class="space-y-2.5">
+			<FlexCol>
 				<FlexRow
 					v-for="msg in chatMessages"
 					:key="msg.id"
@@ -73,90 +75,23 @@ onMounted(() => {
 					gap="3"
 					class="text-xs animate-slide-up"
 				>
-					<!-- System Messages -->
-					<div
+					<ChatMessageSystem
 						v-if="msg.isSystem"
-						class="w-full p-2.5 rounded-xl border border-indigo-500/30 bg-indigo-950/30 text-slate-300 flex items-start gap-2"
-					>
-						<div class="leading-relaxed">
-							<FlexRow gap="2">
-								<span class="font-bold text-indigo-300">{{
-									msg.nickname
-								}}</span>
-								<span
-									class="text-xs text-slate-600"
-									:title="
-										new Date(msg.createdAt).toLocaleString()
-									"
-								>
-									{{
-										new Date(
-											msg.createdAt,
-										).toLocaleTimeString([], {
-											hour: "2-digit",
-											minute: "2-digit",
-										})
-									}}
-								</span>
-							</FlexRow>
-							<p
-								class="mt-0.5 text-slate-300 whitespace-pre-line"
-							>
-								{{ msg.content }}
-							</p>
-						</div>
-					</div>
+						:message="msg"
+					/>
 
-					<!-- User Messages -->
-					<FlexRow
+					<ChatMessageUser
 						v-else
-						align="start"
-						gap="2"
-					>
-						<!-- Emoji Avatar badge -->
-						<div
-							class="w-7 h-7 rounded-lg bg-slate-800/70 border border-slate-700 flex items-center justify-center text-sm shrink-0"
-						>
-							{{ msg.emoji }}
-						</div>
-
-						<FlexCol gap="1">
-							<FlexRow gap="2">
-								<span class="font-semibold text-slate-200">{{
-									msg.nickname
-								}}</span>
-								<span
-									class="text-xs text-slate-600"
-									:title="
-										new Date(msg.createdAt).toLocaleString()
-									"
-								>
-									{{
-										new Date(
-											msg.createdAt,
-										).toLocaleTimeString([], {
-											hour: "2-digit",
-											minute: "2-digit",
-										})
-									}}
-								</span>
-							</FlexRow>
-							<p
-								class="text-slate-400 break-words leading-relaxed max-w-[280px]"
-							>
-								{{ msg.content }}
-							</p>
-						</FlexCol>
-					</FlexRow>
+						:message="msg"
+					/>
 				</FlexRow>
-			</div>
+			</FlexCol>
 		</ScrollArea>
 
+		<Divider/>
+
 		<!-- Message Input Bar -->
-		<FlexRow
-			gap="2"
-			class="mt-1 pt-3 border-t border-slate-800"
-		>
+		<FlexRow>
 			<Input
 				v-model="typedMessage"
 				placeholder="Type a message or vote discussion..."

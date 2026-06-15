@@ -17,7 +17,7 @@ function copyInviteLink() {
 	navigator.clipboard.writeText(window.location.href);
 	isCopiedLink.value = true;
 
-	setTimeout(() => (isCopiedLink.value = false), 2000);
+	setTimeout(() => (isCopiedLink.value = false), 2_000);
 }
 
 const inviteButtonText = computed(() =>

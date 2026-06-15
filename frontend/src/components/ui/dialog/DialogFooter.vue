@@ -10,6 +10,7 @@ const props = withDefaults(
 		showCloseButton?: boolean;
 	}>(),
 	{
+		class: "",
 		showCloseButton: false,
 	},
 );
@@ -28,7 +29,7 @@ const props = withDefaults(
 	>
 		<slot />
 		<DialogClose
-			v-if="showCloseButton"
+			v-if="props.showCloseButton"
 			as-child
 		>
 			<Button variant="outline">

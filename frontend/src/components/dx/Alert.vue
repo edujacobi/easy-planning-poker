@@ -22,10 +22,10 @@ const emit = defineEmits<{
 </script>
 <template>
 	<div
-		v-if="alertMessage"
+		v-if="props.alertMessage"
 		class="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-md px-4"
 	>
-		<Alert :variant="variant">
+		<Alert :variant="props.variant">
 			<FlexRow
 				class="w-full"
 				gap="4"
@@ -39,7 +39,7 @@ const emit = defineEmits<{
 						Warning
 					</AlertTitle>
 					<AlertDescription class="text-xs text-red-300 mt-1">
-						{{ alertMessage }}
+						{{ props.alertMessage }}
 					</AlertDescription>
 				</FlexCol>
 				<DestrutiveButton @click="emit('close')">

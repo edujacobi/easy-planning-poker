@@ -4,6 +4,7 @@ import FlexCol from "./dx/FlexCol.vue";
 import FlexRow from "./dx/FlexRow.vue";
 import FormGroup from "./dx/FormGroup.vue";
 import { Input } from "./ui/input";
+import SelectableItem from "./dx/SelectableItem.vue";
 
 const selectedNickname = defineModel<string>("nickname", { required: true });
 const selectedEmoji = defineModel<string>("emoji", { required: true });
@@ -60,7 +61,7 @@ const emit = defineEmits<{
 		gap="8"
 		align="end"
 	>
-		<FlexCol gap="2">
+		<FlexCol>
 			<Label>
 				Avatar
 			</Label>
@@ -71,22 +72,17 @@ const emit = defineEmits<{
 			</div>
 		</FlexCol>
 
-		<FlexCol gap="2">
+		<FlexCol>
 			<div class="flex flex-wrap gap-1 justify-center md:justify-start">
-				<button
+				<SelectableItem
 					v-for="emoji in emojis"
 					:key="emoji"
-					type="button"
-					class="w-10 h-10 rounded-xl bg-slate-950/60 hover:bg-slate-950 border flex items-center justify-center text-xl transition-all duration-150"
-					:class="
-						selectedEmoji === emoji
-							? 'border-indigo-500 ring-2 ring-indigo-500/10 bg-indigo-700/10 hover:bg-indigo-700/15 scale-110'
-							: 'border-slate-800 hover:border-slate-700'
-					"
+					:active="selectedEmoji === emoji"
+					class="w-10 h-10 flex items-center justify-center text-xl"
 					@click="selectedEmoji = emoji"
 				>
 					{{ emoji }}
-				</button>
+				</SelectableItem>
 			</div>
 		</FlexCol>
 	</FlexRow>

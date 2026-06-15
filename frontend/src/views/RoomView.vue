@@ -94,16 +94,16 @@ const endMessage = computed(() =>
 				:roomId="roomStore.room?.id"
 			/>
 
-			<div class="grid grid-cols-4 gap-6 items-start">
+			<section class="grid grid-cols-4 gap-6 items-start">
 				<IssuesSidebar />
 
-				<div class="col-span-2 space-y-4">
+				<section class="col-span-2 space-y-4">
 					<RoomTable />
 					<CardSelection />
-				</div>
+				</section>
 
 				<ChatSidebar />
-			</div>
+			</section>
 		</FlexCol>
 
 		<FinishSessionModal />
