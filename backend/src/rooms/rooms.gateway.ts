@@ -129,7 +129,7 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 				if (!countsStr) countsStr = "No votes cast";
 
-				const statsMsg = `VOTE RESULTS for "${task.title}" -> Mean: ${stats.mean.toFixed(2)}, Median: ${stats.median}, Votes Breakdown: [ ${countsStr} ]`;
+				const statsMsg = `VOTE RESULTS for "${task.title}":\nMean: ${stats.mean.toFixed(2)}, Median: ${stats.median}, Votes Breakdown: [ ${countsStr} ]`;
 
 				// Send statistics message to chat
 				const chatMsg = await this.roomsService.createChatMessage(
