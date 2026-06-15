@@ -22,7 +22,7 @@ const roomId = route.params.id as string;
 // Profile configuration overlay
 const showProfileSetup = ref(false);
 const localNickname = ref("");
-const localEmoji = ref("😎");
+const localEmoji = ref("");
 
 onMounted(async () => {
 	roomStore.loadUser();

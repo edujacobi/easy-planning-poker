@@ -111,7 +111,7 @@ export const useRoomStore = defineStore("room", {
 			}
 			// Generate new user details
 			const userId = crypto.randomUUID();
-			this.user = { userId, nickname: "", emoji: "👤" };
+			this.user = { userId, nickname: "", emoji: "" };
 			this.saveUser();
 		},
 

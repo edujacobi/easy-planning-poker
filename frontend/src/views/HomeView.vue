@@ -14,7 +14,7 @@ const roomStore = useRoomStore();
 
 // Profile states
 const nickname = ref("");
-const selectedEmoji = ref("😎");
+const selectedEmoji = ref("");
 
 // Alert state
 const alertMessage = ref("");
@@ -37,7 +37,7 @@ onMounted(() => {
 });
 
 function saveProfile() {
-	if (!nickname.value.trim()) return false;
+	if (!nickname.value.trim() || !selectedEmoji.value) return false;
 
 	roomStore.saveUser(nickname.value.trim(), selectedEmoji.value);
 
@@ -46,7 +46,7 @@ function saveProfile() {
 
 function handleJoinRoom(roomId: string) {
 	if (!saveProfile()) {
-		return showAlert("Please enter a nickname first.");
+		return showAlert("Please enter a nickname and emoji first.");
 	}
 
 	router.push(`/room/${roomId}`);
