@@ -32,7 +32,7 @@ const gapClass = computed(() => {
 <template>
 	<div
 		:class="[colClass, rowClass, gapClass]"
-		class="grid"
+		class="grid grid-flow-col"
 	>
 		<slot></slot>
 	</div>

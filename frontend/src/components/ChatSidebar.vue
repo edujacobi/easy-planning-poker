@@ -15,6 +15,7 @@ import Divider from "./dx/Divider.vue";
 const roomStore = useRoomStore();
 const typedMessage = ref("");
 const chatMessages = computed(() => roomStore.chatMessages);
+const scrollAreaRef = ref<any>(null);
 
 function sendMessage() {
 	const msg = typedMessage.value.trim();
@@ -27,12 +28,14 @@ function sendMessage() {
 // Auto scroll to bottom on new messages
 function scrollToBottom() {
 	nextTick(() => {
-		const scrollContainer = document.querySelector(
-			"[data-radix-scroll-area-viewport]",
-		);
+		if (scrollAreaRef.value?.$el) {
+			const scrollContainer = scrollAreaRef.value.$el.querySelector(
+				'[data-slot="scroll-area-viewport"], [data-reka-scroll-area-viewport], [data-radix-scroll-area-viewport]',
+			);
 
-		if (scrollContainer) {
-			scrollContainer.scrollTop = scrollContainer.scrollHeight;
+			if (scrollContainer) {
+				scrollContainer.scrollTop = scrollContainer.scrollHeight;
+			}
 		}
 	});
 }
@@ -66,14 +69,17 @@ onMounted(() => {
 		<Divider/>
 
 		<!-- Message View Box -->
-		<ScrollArea class="flex-1 min-h-[220px]">
+		<ScrollArea
+			ref="scrollAreaRef"
+			class="flex-1 min-h-[220px]"
+		>
 			<FlexCol>
 				<FlexRow
 					v-for="msg in chatMessages"
 					:key="msg.id"
 					align="start"
 					gap="3"
-					class="text-xs animate-slide-up"
+					class="text-xs animate-appear"
 				>
 					<ChatMessageSystem
 						v-if="msg.isSystem"
@@ -109,19 +115,17 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.animate-slide-up {
-	animation: slideUp 0.3s ease-out forwards;
+.animate-appear {
+	animation: appear 0.5s ease-out forwards;
 }
 
-@keyframes slideUp {
+@keyframes appear {
 	from {
 		opacity: 0;
-		transform: translateY(8px);
 	}
 
 	to {
 		opacity: 1;
-		transform: translateY(0);
 	}
 }
 </style>
