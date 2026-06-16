@@ -1,0 +1,18 @@
+# Ignore node_modules in both root and subdirectories to prevent host binaries from leaking into Docker
+node_modules
+**/node_modules
+
+# Ignore build output
+dist
+**/dist
+
+# Ignore local database files
+*.sqlite
+*.sqlite-journal
+
+# Ignore Git files and Docker configs
+.git
+.github
+Dockerfile
+.dockerignore
+.env
