@@ -94,7 +94,7 @@ function handleSubmit() {
 				/>
 			</CardContent>
 			
-			<Divider/>
+			<Divider v-if="props.isAdmin"/>
 
 			<FlexRow
 				v-if="props.isAdmin"

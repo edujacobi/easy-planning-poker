@@ -30,7 +30,7 @@ watch(
 	(newVal) => {
 		if (!newVal && Object.keys(roomStore.players).length > 0) {
 			const myPlayerState = roomStore.players.find(
-				(p) => p.userId === roomStore.user?.userId,
+				(p) => p.userId === roomStore.myHashedUserId,
 			);
 
 			if (myPlayerState && !myPlayerState.hasVoted) {

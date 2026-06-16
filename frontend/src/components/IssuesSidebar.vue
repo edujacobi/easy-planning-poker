@@ -218,11 +218,12 @@ function getTaskPointsDisplay(task: any) {
 		</ScrollArea>
 
 		<!-- Admin Panel Controls -->
-		<Divider/>
+		
 		<FlexCol
 			v-if="isAdmin"
 			class="space-y-3"
 		>
+			<Divider/>
 			<p class="text-xs uppercase tracking-wider text-slate-500 font-semibold">
 				Admin controls
 			</p>
