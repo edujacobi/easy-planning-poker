@@ -26,8 +26,8 @@ RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt
 COPY package*.json ./
 COPY backend/package*.json ./backend/
 
-# Install backend production dependencies (triggers native sqlite3 compile)
-RUN npm install --prefix backend --omit=dev
+# Install backend production dependencies (triggers native sqlite3 compile from source)
+RUN npm install --prefix backend --omit=dev --build-from-source
 
 # Copy built frontend static assets
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
