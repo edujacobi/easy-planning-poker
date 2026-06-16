@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
+import * as crypto from "crypto";
 import { Room } from "./models/room.model";
 import { Story } from "./models/story.model";
 import { Task } from "./models/task.model";
@@ -17,6 +18,12 @@ export interface ActiveRoomState {
 export class RoomsService {
 	// In-memory active voting state for rooms
 	private activeRoomStates = new Map<string, ActiveRoomState>();
+	private sessionSalt = process.env.SESSION_SALT || crypto.randomBytes(16).toString("hex");
+
+	hashUserId(userId: string): string {
+		if (!userId) return "";
+		return crypto.createHmac("sha256", this.sessionSalt).update(userId).digest("hex");
+	}
 
 	constructor(
 		@InjectModel(Room) private roomModel: typeof Room,

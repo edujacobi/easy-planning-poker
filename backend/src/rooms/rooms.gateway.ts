@@ -45,6 +45,10 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			emoji,
 		});
 
+		// Send initialization event back to client with hashed user ID
+		const hashedUserId = this.roomsService.hashUserId(userId);
+		client.emit("initUser", { hashedUserId });
+
 		// Send system alert to chat
 		const systemMsg = await this.roomsService.createChatMessage(
 			roomId,
@@ -54,7 +58,16 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			`${nickname} joined the room!`,
 			true,
 		);
-		this.server.to(roomId).emit("chatMessage", systemMsg);
+		this.server.to(roomId).emit("chatMessage", {
+			id: systemMsg.id,
+			roomId: systemMsg.roomId,
+			userId: systemMsg.userId,
+			nickname: systemMsg.nickname,
+			emoji: systemMsg.emoji,
+			content: systemMsg.content,
+			isSystem: systemMsg.isSystem,
+			createdAt: systemMsg.createdAt,
+		});
 
 		// Broadcast updated state
 		await this.broadcastRoomState(roomId);
@@ -140,7 +153,16 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 					statsMsg,
 					true,
 				);
-				this.server.to(roomId).emit("chatMessage", chatMsg);
+				this.server.to(roomId).emit("chatMessage", {
+					id: chatMsg.id,
+					roomId: chatMsg.roomId,
+					userId: chatMsg.userId,
+					nickname: chatMsg.nickname,
+					emoji: chatMsg.emoji,
+					content: chatMsg.content,
+					isSystem: chatMsg.isSystem,
+					createdAt: chatMsg.createdAt,
+				});
 			}
 		}
 
@@ -203,6 +225,7 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		};
 
 		if (!roomId || !contentValid(data.content)) return;
+		if (data.content.length > 1000) return; // limit content size
 
 		const message = await this.roomsService.createChatMessage(
 			roomId,
@@ -213,7 +236,16 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			false,
 		);
 
-		this.server.to(roomId).emit("chatMessage", message);
+		this.server.to(roomId).emit("chatMessage", {
+			id: message.id,
+			roomId: message.roomId,
+			userId: this.roomsService.hashUserId(userId),
+			nickname: message.nickname,
+			emoji: message.emoji,
+			content: message.content,
+			isSystem: message.isSystem,
+			createdAt: message.createdAt,
+		});
 	}
 
 	// End / Finish Session trigger (Admin Only)
@@ -252,7 +284,16 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 				statsMsg,
 				true,
 			);
-			this.server.to(roomId).emit("chatMessage", chatMsg);
+			this.server.to(roomId).emit("chatMessage", {
+				id: chatMsg.id,
+				roomId: chatMsg.roomId,
+				userId: chatMsg.userId,
+				nickname: chatMsg.nickname,
+				emoji: chatMsg.emoji,
+				content: chatMsg.content,
+				isSystem: chatMsg.isSystem,
+				createdAt: chatMsg.createdAt,
+			});
 
 			// Emit session completion details to all clients
 			this.server.to(roomId).emit("sessionFinished", results);
@@ -299,7 +340,7 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			const isOnline = state.connectedUsers.has(p.userId);
 
 			return {
-				userId: p.userId,
+				userId: this.roomsService.hashUserId(p.userId),
 				nickname: p.nickname,
 				emoji: p.emoji,
 				hasVoted,

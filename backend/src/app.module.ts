@@ -16,7 +16,7 @@ import { RoomsModule } from "./rooms/rooms.module";
 		}),
 		ServeStaticModule.forRoot({
 			rootPath: join(__dirname, "..", "..", "frontend", "dist"),
-			exclude: ["/api/(.*)"],
+			exclude: ["/api", "/api/{*path}"],
 		}),
 		RoomsModule,
 	],

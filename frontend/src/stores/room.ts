@@ -41,7 +41,7 @@ export interface RoomDetails {
 	id: string;
 	title: string;
 	voteType: "linear" | "fibonacci";
-	adminUserId: string;
+	amIAdmin: boolean;
 	stories: StoryItem[];
 }
 
@@ -78,11 +78,12 @@ export const useRoomStore = defineStore("room", {
 		isFinishModalDismissed: false,
 		isLoading: false,
 		error: null as string | null,
+		myHashedUserId: null as string | null,
 	}),
 
 	getters: {
 		isAdmin(state): boolean {
-			return state.room?.adminUserId === state.user?.userId;
+			return state.room?.amIAdmin || false;
 		},
 		activeTask(state): TaskItem | null {
 			if (!state.room || !state.activeTaskId) return null;
@@ -169,7 +170,11 @@ export const useRoomStore = defineStore("room", {
 		// HTTP: Fetch Room Details
 		async fetchRoomDetails(roomId: string) {
 			try {
-				const res = await fetch(`${BACKEND_URL}/api/rooms/${roomId}`);
+				if (!this.user) this.loadUser();
+				const userId = this.user?.userId || "";
+				const res = await fetch(
+					`${BACKEND_URL}/api/rooms/${roomId}?userId=${userId}`,
+				);
 
 				if (!res.ok) throw new Error("Failed to load room details");
 				const data = await res.json();
@@ -227,6 +232,10 @@ export const useRoomStore = defineStore("room", {
 			});
 
 			// Socket Event bindings
+			this.socket.on("initUser", (data: { hashedUserId: string }) => {
+				this.myHashedUserId = data.hashedUserId;
+			});
+
 			this.socket.on(
 				"roomState",
 				(state: {
@@ -275,6 +284,7 @@ export const useRoomStore = defineStore("room", {
 			this.sessionFinishedData = null;
 			this.sessionMode = "voting";
 			this.isFinishModalDismissed = false;
+			this.myHashedUserId = null;
 		},
 
 		// WS Emit Actions

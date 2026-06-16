@@ -40,3 +40,7 @@ build/
 .tmp/
 tmp/
 temp/
+
+# Database
+*.sqlite
+database.sqlite
