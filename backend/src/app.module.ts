@@ -10,7 +10,7 @@ import { RoomsModule } from "./rooms/rooms.module";
 	imports: [
 		SequelizeModule.forRoot({
 			dialect: "sqlite",
-			storage: "./database.sqlite",
+			storage: process.env.DATABASE_STORAGE ?? "./database.sqlite",
 			autoLoadModels: true,
 			synchronize: true,
 		}),
