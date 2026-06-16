@@ -8,7 +8,7 @@
     "install:backend": "npm install --prefix backend",
     "install:frontend": "npm install --prefix frontend",
     "build": "npm run build --prefix frontend && npm run build --prefix backend",
-    "build:prod": "npm run build --prefix frontend --omit=dev && npm run build --prefix backend --omit=dev",
+    "build:prod": "npm run install:frontend && npm run build --omit=dev --prefix frontend && npm run install:backend && npm run build --omit=dev --prefix backend",
     "start": "pm2 start ecosystem.config.js",
     "start:prod": "node backend/dist/main",
     "stop": "pm2 stop ecosystem.config.js",
