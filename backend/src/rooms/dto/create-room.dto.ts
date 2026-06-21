@@ -1,10 +1,19 @@
-import { IsString, IsNotEmpty, IsEnum, IsUUID, IsArray, ValidateNested, MinLength, MaxLength } from "class-validator";
+import {
+	IsString,
+	IsNotEmpty,
+	IsEnum,
+	IsUUID,
+	IsArray,
+	ValidateNested,
+	MinLength,
+	MaxLength,
+} from "class-validator";
 import { Type } from "class-transformer";
 
 class StoryDto {
 	@IsString()
 	@IsNotEmpty()
-	@MaxLength(150)
+	@MaxLength(255)
 	title: string;
 
 	@IsArray()
@@ -16,7 +25,7 @@ export class CreateRoomDto {
 	@IsString()
 	@IsNotEmpty()
 	@MinLength(3)
-	@MaxLength(100)
+	@MaxLength(255)
 	title: string;
 
 	@IsEnum(["linear", "fibonacci"])

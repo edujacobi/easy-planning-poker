@@ -13,7 +13,7 @@ export class Room extends Model<Room> {
 	declare id: string;
 
 	@Column({
-		type: DataType.STRING,
+		type: DataType.STRING(255),
 		allowNull: false,
 	})
 	declare title: string;
