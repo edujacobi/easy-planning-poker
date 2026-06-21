@@ -204,7 +204,7 @@ function getPositionStyles(index: number, total: number) {
 		<div
 			v-for="(player, idx) in players"
 			:key="player.userId"
-			class="absolute transition-all duration-500 flex flex-col items-center gap-1.5"
+			class="absolute transition-all duration-500 flex flex-col items-center gap-1.5 z-20"
 			:style="getPositionStyles(idx, players.length)"
 		>
 			<!-- Voted Card Space slot -->
