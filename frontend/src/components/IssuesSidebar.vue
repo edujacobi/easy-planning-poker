@@ -120,7 +120,7 @@ function getTaskPointsDisplay(task: any) {
 
 <template>
 	<GlassCard
-		class="w-full grid grid-rows-[max-content,1fr,auto] h-full p-4 gap-1 max-h-[70dvh]"
+		class="w-full min-w-0 grid grid-rows-[max-content,1fr,auto] h-full p-4 gap-1 max-h-[70dvh]"
 	>
 		<!-- Header -->
 		<FlexCol>
@@ -148,10 +148,10 @@ function getTaskPointsDisplay(task: any) {
 
 
 		<!-- Stories list accordion -->
-		<ScrollArea class="min-h-[400px]">
+		<ScrollArea class="w-full min-w-0 min-h-[400px]">
 			<Accordion
 				type="multiple"
-				class="w-full space-y-2"
+				class="w-full min-w-0 space-y-2"
 			>
 				<AccordionItem
 					v-for="story in roomStore.room?.stories"
@@ -160,17 +160,20 @@ function getTaskPointsDisplay(task: any) {
 					class="border border-slate-800/60 rounded-xl bg-slate-950/20 overflow-hidden"
 				>
 					<AccordionTrigger
-						class="px-3 py-2.5 hover:no-underline hover:bg-slate-950/40 text-slate-200"
+						class="w-full min-w-0 px-3 py-2.5 hover:no-underline hover:bg-slate-950/40 text-slate-200"
 					>
 						<FlexRow
 							justify="between"
-							class="w-full pr-2 text-sm font-semibold"
+							class="w-full min-w-0 pr-2 text-sm font-semibold"
 						>
-							<span class="truncate max-w-[150px]">
+							<span
+								class="flex-1 min-w-0 truncate text-left"
+								:title="story.title"
+							>
 								{{ story.title }}
 							</span>
 							<FlexRow
-								class="text-xs px-2 py-0.5 rounded-full font-mono"
+								class="text-xs px-2 py-0.5 rounded-full font-mono shrink-0"
 								:class="checkAllTasksVotedFromStory(story) ? 
 									'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 
 									'bg-slate-800 text-slate-400'
@@ -192,15 +195,18 @@ function getTaskPointsDisplay(task: any) {
 							v-for="task in story.tasks"
 							:key="task.id"
 							justify="between"
-							class="p-2 rounded-lg text-xs transition duration-200 select-none"
+							class="w-full min-w-0 p-2 rounded-lg text-xs transition duration-200 select-none"
 							:class="getTaskClass(task)"
 							@click="selectTask(task.id)"
 						>
 							<FlexCol
 								gap="1"
-								class="max-w-[70%]"
+								class="flex-1 min-w-0"
 							>
-								<span class="truncate text-slate-200">
+								<span
+									class="truncate text-slate-200"
+									:title="task.title"
+								>
 									{{ task.title }}
 								</span>
 								<span class="text-xs text-slate-500 font-mono">
@@ -208,7 +214,7 @@ function getTaskPointsDisplay(task: any) {
 								</span>
 							</FlexCol>
 
-							<div class="text-xs font-mono text-slate-300">
+							<div class="text-xs font-mono text-slate-300 shrink-0">
 								{{ getTaskPointsDisplay(task) }}
 							</div>
 						</FlexRow>
