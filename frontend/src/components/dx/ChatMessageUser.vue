@@ -23,25 +23,25 @@ const createdAtTitle = computed(() => {
 <template>
 	<FlexRow align="start">
 		<div
-			class="w-7 h-7 rounded-lg bg-slate-800/70 border border-slate-700 flex items-center justify-center text-sm shrink-0"
+			class="w-7 h-7 rounded-lg bg-muted/70 border flex items-center justify-center text-sm shrink-0"
 		>
 			{{ message.emoji }}
 		</div>
 
 		<FlexCol gap="1">
 			<FlexRow>
-				<span class="font-semibold text-slate-200">
+				<span class="font-semibold text-foreground">
 					{{ message.nickname }}
 				</span>
 				<span
-					class="text-xs text-slate-600"
+					class="text-xs text-muted-foreground/60"
 					:title="createdAtTitle"
 				>
 					{{ createdAt }}
 				</span>
 			</FlexRow>
 			<p
-				class="text-slate-400 break-words leading-relaxed max-w-[280px]"
+				class="text-muted-foreground break-words leading-relaxed max-w-[280px]"
 			>
 				{{ message.content }}
 			</p>

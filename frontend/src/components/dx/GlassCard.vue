@@ -3,7 +3,7 @@ import { Card } from "../ui/card";
 </script>
 
 <template>
-	<Card class="border border-slate-800/40 bg-slate-900/60">
+	<Card class="backdrop-blur-md">
 		<slot />
 	</Card>
 </template>

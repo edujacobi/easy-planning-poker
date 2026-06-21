@@ -97,7 +97,7 @@ function getPlayerVoteDisplay(player: any) {
 
 function getPlayerVotedCardClass() {
 	return votingRevealed.value
-		? "bg-slate-950 border-indigo-500 text-indigo-400 shadow-indigo-500/10"
+		? "bg-background border-indigo-500 text-indigo-400 shadow-indigo-500/10"
 		: "bg-indigo-700 border-indigo-500 text-white";
 }
 
@@ -106,11 +106,11 @@ function getPlayerBadgeClass(player: any) {
 		? player.isAdmin
 			? "border-amber-500"
 			: "border-emerald-500"
-		: "border-slate-800 opacity-40";
+		: "border-border opacity-40";
 }
 
 function getPlayerNameClass(player: any) {
-	return player.isOnline ? "text-slate-200" : "text-slate-700";
+	return player.isOnline ? "text-foreground" : "text-muted-foreground opacity-40";
 }
 
 function getPlayerRoleText(player: any) {
@@ -141,7 +141,7 @@ function getPositionStyles(index: number, total: number) {
 	<div class="relative w-full h-[400px] md:h-[500px] overflow-hidden">
 		<!-- Table Ring Center -->
 		<div
-			class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[55%] h-[40%] min-w-[240px] min-h-[170px] bg-gradient-to-br from-indigo-900/40 to-slate-900/60 border border-indigo-500/20 rounded-[3rem] flex flex-col items-center justify-center text-center px-4 shadow-2xl shadow-indigo-500/5 backdrop-blur-md transition-all duration-300 z-10"
+			class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[55%] h-[40%] min-w-[240px] min-h-[170px] bg-gradient-to-br from-indigo-900/40 to-card/60 border border-indigo-500/20 rounded-[3rem] flex flex-col items-center justify-center text-center px-4 shadow-2xl shadow-indigo-500/5 backdrop-blur-md transition-all duration-300 z-10"
 		>
 			<p class="text-xs uppercase tracking-wider text-indigo-400 font-semibold mb-1">
 				{{ sessionSubtitle }}
@@ -160,7 +160,7 @@ function getPositionStyles(index: number, total: number) {
 							{{ meanValue !== null ? meanValue : '-' }}
 						</p>
 					</div>
-					<div class="w-px h-6 bg-slate-800/80"></div>
+					<div class="w-px h-6 bg-border"></div>
 					<div class="flex flex-col items-center">
 						<p class="text-[10px] uppercase tracking-wider text-slate-400 font-medium">
 							Median
@@ -220,7 +220,7 @@ function getPositionStyles(index: number, total: number) {
 				<!-- Empty spacer when has not voted -->
 				<div
 					v-else-if="player.isOnline"
-					class="h-12 w-9 min-w-9 rounded-lg border border-dashed border-slate-700 bg-slate-900/20 flex items-center justify-center text-slate-600 text-xs font-semibold"
+					class="h-12 w-9 min-w-9 rounded-lg border border-dashed border-border bg-card/20 flex items-center justify-center text-muted-foreground text-xs font-semibold"
 				></div>
 			</div>
 
@@ -243,7 +243,7 @@ function getPositionStyles(index: number, total: number) {
 						{{ player.nickname }}
 					</p>
 					<p
-						class="text-xs text-slate-500"
+						class="text-xs text-muted-foreground"
 						:class="player.isAdmin ? 'text-amber-500' : ''"
 					>
 						{{ getPlayerRoleText(player) }}

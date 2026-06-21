@@ -50,7 +50,7 @@ function handleSubmit() {
 
 <template>
 	<div
-		class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center z-50 p-4"
+		class="fixed inset-0 bg-background/80 backdrop-blur-md flex items-center justify-center z-50 p-4"
 	>
 		<Alert
 			:alertMessage="alertMessage"
@@ -79,7 +79,7 @@ function handleSubmit() {
 					class="text-center py-6 space-y-3"
 				>
 					<Spinner borderColor="amber" />
-					<p class="text-sm text-slate-400">
+					<p class="text-sm text-muted-foreground">
 						Admin is currently adding more Stories to estimation
 						backlog...
 					</p>

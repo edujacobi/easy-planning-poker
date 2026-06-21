@@ -102,7 +102,7 @@ function getTaskClass(task: any) {
 	return [
 		isActive
 			? "bg-indigo-600/15 border border-indigo-500/30 text-indigo-300 ps-3 transition-all duration-150"
-			: "bg-slate-950/30 hover:bg-slate-950/60 text-slate-400 border border-transparent transition-all duration-150",
+			: "bg-background/30 hover:bg-background/60 text-muted-foreground border border-transparent transition-all duration-150",
 		isAdmin.value ? "cursor-pointer" : "cursor-default",
 	];
 }
@@ -157,10 +157,10 @@ function getTaskPointsDisplay(task: any) {
 					v-for="story in roomStore.room?.stories"
 					:key="story.id"
 					:value="story.id"
-					class="border border-slate-800/60 rounded-xl bg-slate-950/20 overflow-hidden"
+					class="border rounded-xl bg-background/20 overflow-hidden"
 				>
 					<AccordionTrigger
-						class="w-full min-w-0 px-3 py-2.5 hover:no-underline hover:bg-slate-950/40 text-slate-200"
+						class="w-full min-w-0 px-3 py-2.5 hover:no-underline hover:bg-background/40 text-foreground"
 					>
 						<FlexRow
 							justify="between"
@@ -176,7 +176,7 @@ function getTaskPointsDisplay(task: any) {
 								class="text-xs px-2 py-0.5 rounded-full font-mono shrink-0"
 								:class="checkAllTasksVotedFromStory(story) ? 
 									'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 
-									'bg-slate-800 text-slate-400'
+									'bg-muted text-muted-foreground'
 								"
 							>
 								<CheckCircle2
@@ -188,7 +188,7 @@ function getTaskPointsDisplay(task: any) {
 						</FlexRow>
 					</AccordionTrigger>
 					<AccordionContent
-						class="px-3 pt-1 pb-3 space-y-1.5 border-t border-slate-950"
+						class="px-3 pt-1 pb-3 space-y-1.5 border-t"
 					>
 						<!-- Nested Tasks -->
 						<FlexRow
@@ -209,12 +209,12 @@ function getTaskPointsDisplay(task: any) {
 								>
 									{{ task.title }}
 								</span>
-								<span class="text-xs text-slate-500 font-mono">
+								<span class="text-xs text-muted-foreground font-mono">
 									{{ getTaskStatusLabel(task) }}
 								</span>
 							</FlexCol>
 
-							<div class="text-xs font-mono text-slate-300 shrink-0">
+							<div class="text-xs font-mono text-muted-foreground shrink-0">
 								{{ getTaskPointsDisplay(task) }}
 							</div>
 						</FlexRow>
@@ -230,7 +230,7 @@ function getTaskPointsDisplay(task: any) {
 			class="space-y-3"
 		>
 			<Divider/>
-			<p class="text-xs uppercase tracking-wider text-slate-500 font-semibold">
+			<p class="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
 				Admin controls
 			</p>
 

@@ -67,7 +67,7 @@ function getCardClass(card: string) {
 	return [
 		isVoteActive
 			? "bg-indigo-700 border-indigo-500 text-white -translate-y-2 scale-105"
-			: "bg-slate-950 border-slate-800 text-slate-500 hover:bg-slate-900 hover:border-slate-700 hover:text-slate-400 hover:-translate-y-1",
+			: "bg-background border-border text-muted-foreground hover:bg-muted hover:border-border hover:text-foreground hover:-translate-y-1",
 
 		isInteractionDisabled
 			? "opacity-40 cursor-not-allowed hover:translate-y-0"
@@ -81,7 +81,7 @@ function getCardClass(card: string) {
 		align="center"
 		gap="4"
 	>
-		<p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">
+		<p class="text-muted-foreground text-xs font-semibold uppercase tracking-wider">
 			{{ chooseCardLabel }}
 		</p>
 

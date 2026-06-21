@@ -5,10 +5,10 @@ const props = defineProps<{
 </script>
 <template>
 	<div
-		class="bg-slate-950 rounded-xl border border-slate-800/60 p-4 h-[35dvh] overflow-y-auto text-left w-full"
+		class="bg-background rounded-xl border p-4 h-[35dvh] overflow-y-auto text-left w-full"
 	>
 		<pre
-			class="text-xs font-mono text-slate-400 whitespace-pre-wrap leading-relaxed"
+			class="text-xs font-mono text-muted-foreground whitespace-pre-wrap leading-relaxed"
 		>{{ props.markdownContent }}</pre>
 	</div>
 </template>

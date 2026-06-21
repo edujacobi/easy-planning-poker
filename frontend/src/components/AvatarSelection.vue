@@ -66,7 +66,7 @@ const emit = defineEmits<{
 				Avatar
 			</Label>
 			<div
-				class="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl border border-slate-400/20"
+				class="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl border"
 			>
 				{{ selectedEmoji }}
 			</div>

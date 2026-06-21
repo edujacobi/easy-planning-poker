@@ -39,7 +39,7 @@ const inviteButtonText = computed(() =>
 				Return
 			</OutlineButton>
 
-			<span class="border-l border-slate-800/60 h-6"></span>
+			<span class="border-l h-6"></span>
 
 			<div>
 				<h2 class="text-lg font-bold text-white leading-none">

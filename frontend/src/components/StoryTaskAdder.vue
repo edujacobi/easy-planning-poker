@@ -57,7 +57,7 @@ function removeTask(storyIndex: number, taskIndex: number) {
 				<!-- Story Header -->
 				<FlexRow>
 					<div
-						class="text-sm bg-slate-800 text-slate-300 px-3 py-0.5 rounded font-mono shrink-0"
+						class="text-sm bg-muted text-muted-foreground px-3 py-0.5 rounded font-mono shrink-0"
 					>
 						Story {{ sIdx + 1 }}
 					</div>
@@ -76,14 +76,14 @@ function removeTask(storyIndex: number, taskIndex: number) {
 
 				<!-- Nested Tasks -->
 				<div
-					class="pl-6 space-y-2 border-l border-slate-800 pb-3"
+					class="pl-6 space-y-2 border-l pb-3"
 				>
 					<FlexRow
 						v-for="(_, tIdx) in story.tasks"
 						:key="tIdx"
 					>
 						<span
-							class="text-sm text-slate-500 font-mono shrink-0"
+							class="text-sm text-muted-foreground font-mono shrink-0"
 						>
 							Task {{ tIdx + 1 }}
 						</span>
