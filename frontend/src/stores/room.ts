@@ -301,6 +301,7 @@ export const useRoomStore = defineStore("room", {
 		},
 
 		selectTask(taskId: string) {
+			if (this.activeTaskId === taskId) return;
 			this.socket?.emit("selectTask", { taskId });
 		},
 

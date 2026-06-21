@@ -18,11 +18,15 @@ export interface ActiveRoomState {
 export class RoomsService {
 	// In-memory active voting state for rooms
 	private activeRoomStates = new Map<string, ActiveRoomState>();
-	private sessionSalt = process.env.SESSION_SALT || crypto.randomBytes(16).toString("hex");
+	private sessionSalt =
+		process.env.SESSION_SALT || crypto.randomBytes(16).toString("hex");
 
 	hashUserId(userId: string): string {
 		if (!userId) return "";
-		return crypto.createHmac("sha256", this.sessionSalt).update(userId).digest("hex");
+		return crypto
+			.createHmac("sha256", this.sessionSalt)
+			.update(userId)
+			.digest("hex");
 	}
 
 	constructor(
@@ -268,6 +272,7 @@ export class RoomsService {
 	// Set the active task being voted
 	selectTask(roomId: string, taskId: string): ActiveRoomState {
 		const state = this.getOrCreateActiveState(roomId);
+		if (state.activeTaskId === taskId) return state;
 		state.activeTaskId = taskId;
 		state.votes = {};
 		state.votingRevealed = false;
