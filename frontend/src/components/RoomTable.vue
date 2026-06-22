@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useRoomStore } from "../stores/room";
+import GlassCard from "./dx/GlassCard.vue";
 
 const roomStore = useRoomStore();
 
@@ -138,116 +139,123 @@ function getPositionStyles(index: number, total: number) {
 </script>
 
 <template>
-	<div class="relative w-full h-[400px] md:h-[500px] overflow-hidden">
-		<!-- Table Ring Center -->
-		<div
-			class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[55%] h-[40%] min-w-[240px] min-h-[170px] bg-gradient-to-br from-indigo-100/40 dark:from-indigo-900/40 to-card/60 border border-indigo-500/20 rounded-[3rem] flex flex-col items-center justify-center text-center px-4 shadow-2xl shadow-indigo-500/5 backdrop-blur-md transition-all duration-300 z-10"
+	<div class="flex flex-col gap-4">
+		<!-- Active Task Banner -->
+		<h2
+			class="text-xl font-bold text-foreground mt-0.5 truncate text-center"
+			:title="sessionTitle"
 		>
-			<p class="text-xs uppercase tracking-wider text-indigo-600 dark:text-indigo-400 font-semibold mb-1">
-				{{ sessionSubtitle }}
-			</p>
-			<p class="text-foreground text-sm md:text-base font-medium max-w-[85%] truncate mb-1">
-				{{ sessionTitle }}
-			</p>
-			
-			<template v-if="votingRevealed">
-				<div class="flex items-center gap-6 mt-1">
-					<div class="flex flex-col items-center">
-						<p class="text-[10px] uppercase tracking-wider text-slate-400 font-medium">
-							Mean
-						</p>
-						<p class="text-lg md:text-xl font-extrabold text-foreground">
-							{{ meanValue !== null ? meanValue : '-' }}
-						</p>
-					</div>
-					<div class="w-px h-6 bg-border"></div>
-					<div class="flex flex-col items-center">
-						<p class="text-[10px] uppercase tracking-wider text-slate-400 font-medium">
-							Median
-						</p>
-						<p class="text-lg md:text-xl font-extrabold text-foreground">
-							{{ medianValue !== null ? medianValue : '-' }}
-						</p>
-					</div>
-				</div>
+			{{ sessionTitle }}
+		</h2>
 
-				<!-- Votes Breakdown -->
-				<div class="w-full mt-2 flex flex-col items-center">
-					<p class="text-[10px] uppercase tracking-wider text-slate-400 font-medium mb-1">
-						Votes Breakdown
-					</p>
-					<div class="flex flex-wrap gap-1.5 justify-center max-w-full max-h-[50px] overflow-y-auto px-2 py-0.5 scrollbar-thin">
-						<div
-							v-for="item in votesBreakdown"
-							:key="item.value"
-							class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-300 flex items-center gap-1 font-mono font-bold"
-							:title="`${item.count} vote(s) (${item.percentage}%)`"
-						>
-							<p class="text-foreground text-xs font-bold">
-								{{ item.value }}
+		<!-- Table Area -->
+		<div class="relative w-full h-[400px] md:h-[500px] overflow-hidden">
+			<!-- Table Ring Center -->
+			<div
+				class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[55%] h-[40%] min-w-[240px] min-h-[170px] bg-gradient-to-br from-indigo-100/40 dark:from-indigo-900/40 to-card/60 border border-indigo-500/20 rounded-[3rem] flex flex-col items-center justify-center text-center px-4 shadow-2xl shadow-indigo-500/5 backdrop-blur-md transition-all duration-300 z-10"
+			>
+				<template v-if="votingRevealed">
+					<div class="flex items-center gap-6 mt-1">
+						<div class="flex flex-col items-center">
+							<p class="text-[10px] uppercase tracking-wider text-slate-400 font-medium">
+								Mean
 							</p>
-							<p class="text-indigo-600 dark:text-indigo-400 font-normal">
-								x{{ item.count }}
+							<p class="text-lg md:text-xl font-extrabold text-foreground">
+								{{ meanValue !== null ? meanValue : '-' }}
+							</p>
+						</div>
+						<div class="w-px h-6 bg-border"></div>
+						<div class="flex flex-col items-center">
+							<p class="text-[10px] uppercase tracking-wider text-slate-400 font-medium">
+								Median
+							</p>
+							<p class="text-lg md:text-xl font-extrabold text-foreground">
+								{{ medianValue !== null ? medianValue : '-' }}
 							</p>
 						</div>
 					</div>
-				</div>
-			</template>
-			<template v-else>
-				<p class="text-slate-400 text-xs animate-pulse">
-					{{ tableStatusText }}
-				</p>
-			</template>
-		</div>
 
-		<!-- Players distributed circularly around the table -->
-		<div
-			v-for="(player, idx) in players"
-			:key="player.userId"
-			class="absolute transition-all duration-500 flex flex-col items-center gap-1.5 z-20"
-			:style="getPositionStyles(idx, players.length)"
-		>
-			<!-- Voted Card Space slot -->
-			<div class="h-14 w-10 flex items-center justify-center relative">
-				<div
-					v-if="player.hasVoted && player.isOnline"
-					class="h-12 w-9 min-w-9 rounded-lg flex items-center justify-center font-bold text-sm border transition-all duration-300"
-					:class="getPlayerVotedCardClass()"
-				>
-					{{ getPlayerVoteDisplay(player) }}
-				</div>
-
-				<!-- Empty spacer when has not voted -->
-				<div
-					v-else-if="player.isOnline"
-					class="h-12 w-9 min-w-9 rounded-lg border border-dashed border-border bg-card/20 flex items-center justify-center text-muted-foreground text-xs font-semibold"
-				></div>
+					<!-- Votes Breakdown -->
+					<div class="w-full mt-2 flex flex-col items-center">
+						<p class="text-[10px] uppercase tracking-wider text-slate-400 font-medium mb-1">
+							Votes Breakdown
+						</p>
+						<div class="flex flex-wrap gap-1.5 justify-center max-w-full max-h-[50px] overflow-y-auto px-2 py-0.5 scrollbar-thin">
+							<div
+								v-for="item in votesBreakdown"
+								:key="item.value"
+								class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-300 flex items-center gap-1 font-mono font-bold"
+								:title="`${item.count} vote(s) (${item.percentage}%)`"
+							>
+								<p class="text-foreground text-xs font-bold">
+									{{ item.value }}
+								</p>
+								<p class="text-indigo-600 dark:text-indigo-400 font-normal">
+									x{{ item.count }}
+								</p>
+							</div>
+						</div>
+					</div>
+				</template>
+				<template v-else>
+					<p class="text-xs uppercase tracking-wider text-indigo-600 dark:text-indigo-400 font-semibold">
+						{{ sessionSubtitle }}
+					</p>
+					<p class="text-slate-400 text-xs animate-pulse">
+						{{ tableStatusText }}
+					</p>
+				</template>
 			</div>
 
-			<!-- Avatar & Name details -->
-			<div class="relative flex flex-col items-center">
-				<!-- Emoji Badge with online state border -->
-				<div
-					class="w-11 h-11 rounded-full flex items-center justify-center text-2xl border-2 relative"
-					:class="getPlayerBadgeClass(player)"
-				>
-					{{ player.emoji }}
+			<!-- Players distributed circularly around the table -->
+			<div
+				v-for="(player, idx) in players"
+				:key="player.userId"
+				class="absolute transition-all duration-500 flex flex-col items-center gap-1.5 z-20"
+				:style="getPositionStyles(idx, players.length)"
+			>
+				<!-- Voted Card Space slot -->
+				<div class="h-14 w-10 flex items-center justify-center relative">
+					<div
+						v-if="player.hasVoted && player.isOnline"
+						class="h-12 w-9 min-w-9 rounded-lg flex items-center justify-center font-bold text-sm border transition-all duration-300"
+						:class="getPlayerVotedCardClass()"
+					>
+						{{ getPlayerVoteDisplay(player) }}
+					</div>
+
+					<!-- Empty spacer when has not voted -->
+					<div
+						v-else-if="player.isOnline"
+						class="h-12 w-9 min-w-9 rounded-lg border border-dashed border-indigo-500/50 bg-card/20 flex items-center justify-center text-muted-foreground text-xs font-semibold"
+					></div>
 				</div>
 
-				<!-- Name Label -->
-				<div class="mt-1 text-center max-w-[80px]">
-					<p
-						class="text-xs font-semibold truncate"
-						:class="getPlayerNameClass(player)"
+				<!-- Avatar & Name details -->
+				<div class="relative flex flex-col items-center">
+					<!-- Emoji Badge with online state border -->
+					<div
+						class="w-11 h-11 rounded-full flex items-center justify-center text-2xl border-2 relative"
+						:class="getPlayerBadgeClass(player)"
 					>
-						{{ player.nickname }}
-					</p>
-					<p
-						class="text-xs text-muted-foreground"
-						:class="player.isAdmin ? 'text-amber-500' : ''"
-					>
-						{{ getPlayerRoleText(player) }}
-					</p>
+						{{ player.emoji }}
+					</div>
+
+					<!-- Name Label -->
+					<div class="mt-1 text-center max-w-[80px]">
+						<p
+							class="text-xs font-semibold truncate"
+							:class="getPlayerNameClass(player)"
+						>
+							{{ player.nickname }}
+						</p>
+						<p
+							class="text-xs text-muted-foreground"
+							:class="player.isAdmin ? 'text-amber-500' : ''"
+						>
+							{{ getPlayerRoleText(player) }}
+						</p>
+					</div>
 				</div>
 			</div>
 		</div>
