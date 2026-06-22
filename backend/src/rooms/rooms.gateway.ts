@@ -327,12 +327,17 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	}
 
 	// Edit stories event (Admin Only)
-	// ponytail: updates database stories/tasks and broadcasts/forces client reload.
 	@SubscribeMessage("editStories")
 	async handleEditStories(
 		@ConnectedSocket() client: Socket,
 		@MessageBody()
-		data: { stories: Array<{ id?: string; title: string; tasks: Array<{ id?: string; title: string }> }> },
+		data: {
+			stories: Array<{
+				id?: string;
+				title: string;
+				tasks: Array<{ id?: string; title: string }>;
+			}>;
+		},
 	) {
 		const { roomId, userId } = client.handshake.query as {
 			roomId: string;

@@ -10,7 +10,7 @@ const props = defineProps<Props>();
 	<div
 		align="center"
 		justify="center"
-		class="bg-background/60 border rounded-xl p-3.5"
+		class="bg-background border rounded-xl p-3.5"
 	>
 		<div class="text-muted-foreground text-xs font-bold uppercase tracking-wider">
 			{{ props.title }}

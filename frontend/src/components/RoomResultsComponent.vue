@@ -42,7 +42,7 @@ const copyButtonText = computed(() =>
 
 <template>
 	<div
-		class="fixed inset-0 bg-background/90 backdrop-blur-lg flex items-center justify-center z-50 p-4 md:p-8"
+		class="fixed inset-0 backdrop-blur-md bg-background/80 flex items-center justify-center z-50 p-4 md:p-8"
 	>
 		<GlassCard class="w-full max-w-2xl">
 			<CardHeader class="text-center">

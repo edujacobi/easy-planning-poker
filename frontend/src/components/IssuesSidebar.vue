@@ -123,7 +123,7 @@ function getTaskPointsDisplay(task: any) {
 
 <template>
 	<GlassCard
-		class="w-full min-w-0 grid grid-rows-[max-content,1fr,auto] h-full p-4 gap-1 max-h-[70dvh]"
+		class="w-full min-w-0 grid grid-rows-[max-content,1fr,auto] h-full p-4 gap-1 max-h-[80dvh]"
 	>
 		<!-- Header -->
 		<FlexCol>
@@ -134,7 +134,7 @@ function getTaskPointsDisplay(task: any) {
 						:size="16"
 					/>
 					<h3 class="text-sm font-bold text-white">
-						Issues & Stories
+						Stories and Tasks
 					</h3>
 				</FlexRow>
 				<FlexRow
@@ -230,7 +230,7 @@ function getTaskPointsDisplay(task: any) {
 		
 		<FlexCol
 			v-if="isAdmin"
-			class="space-y-3"
+			class="gap-3"
 		>
 			<Divider/>
 			<p class="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
