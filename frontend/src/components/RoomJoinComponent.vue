@@ -70,9 +70,9 @@ const alertMessage = ref("");
 function showAlert(msg: string) {
 	alertMessage.value = msg;
 
-	setTimeout(() => {
-		if (alertMessage.value === msg) alertMessage.value = "";
-	}, 10_000);
+	// setTimeout(() => {
+	// 	if (alertMessage.value === msg) alertMessage.value = "";
+	// }, 10_000);
 }
 
 function joinRoom() {
@@ -179,7 +179,7 @@ function createRoom() {
 								:active="voteType === type.value"
 								@click="voteType = type.value"
 							>
-								<p class="font-bold text-white">
+								<p class="font-bold text-foreground">
 									{{ type.label }}
 								</p>
 								<p class="text-sm text-slate-400">

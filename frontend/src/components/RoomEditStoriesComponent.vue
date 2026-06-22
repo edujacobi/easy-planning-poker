@@ -63,7 +63,7 @@ function handleSave() {
 			class="w-full max-w-xl max-h-[85vh] flex flex-col p-6 gap-4"
 		>
 			<FlexCol gap="1">
-				<h2 class="text-lg font-bold text-white">
+				<h2 class="text-lg font-bold text-foreground">
 					Edit Stories and Tasks
 				</h2>
 				<p class="text-xs text-slate-400">

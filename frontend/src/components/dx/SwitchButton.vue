@@ -11,7 +11,7 @@
 		:class="
 			active
 				? 'bg-indigo-600 text-white shadow-md'
-				: 'text-slate-400 hover:text-slate-200'
+				: 'text-muted-foreground hover:text-foreground'
 		"
 	>
 		<slot></slot>

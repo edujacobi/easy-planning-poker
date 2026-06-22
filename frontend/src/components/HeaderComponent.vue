@@ -5,13 +5,13 @@ import { Sparkles } from "lucide-vue-next";
 <template>
 	<header class="text-center mb-4 animate-fade-in">
 		<span
-			class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-500/20 bg-amber-500/5 text-amber-400 text-xs font-semibold mb-3 tracking-wider uppercase"
+			class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-600/20 bg-amber-600/10 text-amber-600 dark:border-amber-500/20 dark:bg-amber-500/5 dark:text-amber-400 text-xs font-semibold mb-3 tracking-wider uppercase"
 		>
 			<Sparkles class="size-3.5" />
 			Real-Time Estimation Platform
 		</span>
 		<h1
-			class="text-4xl md:text-6xl font-extrabold tracking-tight text-indigo-200"
+			class="text-4xl md:text-6xl font-extrabold tracking-tight text-indigo-500 dark:text-indigo-200"
 		>
 			Easy Planning Poker
 		</h1>

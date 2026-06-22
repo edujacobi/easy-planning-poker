@@ -30,15 +30,15 @@ const emit = defineEmits<{
 				class="w-full"
 				gap="4"
 			>
-				<AlertTriangle class="w-5 h-5 text-red-400" />
+				<AlertTriangle class="w-5 h-5 text-red-700 dark:text-red-400" />
 				<FlexCol
 					class="flex-1"
 					gap="1"
 				>
-					<AlertTitle>
+					<AlertTitle class="text-red-800 dark:text-red-200">
 						Warning
 					</AlertTitle>
-					<AlertDescription class="text-xs text-red-300 mt-1">
+					<AlertDescription class="text-xs text-red-700 dark:text-red-300 mt-1">
 						{{ props.alertMessage }}
 					</AlertDescription>
 				</FlexCol>

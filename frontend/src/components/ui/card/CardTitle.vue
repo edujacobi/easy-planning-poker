@@ -22,7 +22,7 @@ const sizeClass = sizeClasses[props.size ?? "normal"];
 		:class="
 			cn(
 				'text-base leading-snug font-medium group-data-[size=sm]/card:text-sm cn-font-heading',
-				'text-white',
+				'text-foreground',
 				sizeClass,
 				props.class,
 			)

@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ArrowLeft, Check, Share2 } from "lucide-vue-next";
+import { ArrowLeft, Check, Share2, Sun, Moon } from "lucide-vue-next";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import FlexRow from "./dx/FlexRow.vue";
 import GlassCard from "./dx/GlassCard.vue";
 import OutlineButton from "./dx/OutlineButton.vue";
+import { useTheme } from "../lib/theme";
 
 defineProps<{
 	roomTitle: string | undefined;
@@ -13,6 +14,7 @@ defineProps<{
 
 const router = useRouter();
 const isCopiedLink = ref(false);
+const { isDark, toggleTheme } = useTheme();
 
 function copyInviteLink() {
 	navigator.clipboard.writeText(window.location.href);
@@ -42,7 +44,7 @@ const inviteButtonText = computed(() =>
 			<span class="border-l h-6"></span>
 
 			<div>
-				<h2 class="text-lg font-bold text-white leading-none">
+				<h2 class="text-lg font-bold text-foreground leading-none">
 					{{ roomTitle }}
 				</h2>
 				<p class="text-xs text-slate-500 font-mono mt-1">
@@ -63,6 +65,16 @@ const inviteButtonText = computed(() =>
 				<Share2 v-else />
 				{{ inviteButtonText }}
 			</OutlineButton>
+
+			<OutlineButton
+				size="sm"
+				@click="toggleTheme"
+				aria-label="Toggle theme"
+			>
+				<Sun v-if="isDark" class="h-4 w-4" />
+				<Moon v-else class="h-4 w-4" />
+			</OutlineButton>
 		</FlexRow>
 	</GlassCard>
 </template>
+

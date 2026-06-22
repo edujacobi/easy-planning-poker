@@ -141,12 +141,12 @@ function getPositionStyles(index: number, total: number) {
 	<div class="relative w-full h-[400px] md:h-[500px] overflow-hidden">
 		<!-- Table Ring Center -->
 		<div
-			class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[55%] h-[40%] min-w-[240px] min-h-[170px] bg-gradient-to-br from-indigo-900/40 to-card/60 border border-indigo-500/20 rounded-[3rem] flex flex-col items-center justify-center text-center px-4 shadow-2xl shadow-indigo-500/5 backdrop-blur-md transition-all duration-300 z-10"
+			class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[55%] h-[40%] min-w-[240px] min-h-[170px] bg-gradient-to-br from-indigo-100/40 dark:from-indigo-900/40 to-card/60 border border-indigo-500/20 rounded-[3rem] flex flex-col items-center justify-center text-center px-4 shadow-2xl shadow-indigo-500/5 backdrop-blur-md transition-all duration-300 z-10"
 		>
-			<p class="text-xs uppercase tracking-wider text-indigo-400 font-semibold mb-1">
+			<p class="text-xs uppercase tracking-wider text-indigo-600 dark:text-indigo-400 font-semibold mb-1">
 				{{ sessionSubtitle }}
 			</p>
-			<p class="text-white text-sm md:text-base font-medium max-w-[85%] truncate mb-1">
+			<p class="text-foreground text-sm md:text-base font-medium max-w-[85%] truncate mb-1">
 				{{ sessionTitle }}
 			</p>
 			
@@ -156,7 +156,7 @@ function getPositionStyles(index: number, total: number) {
 						<p class="text-[10px] uppercase tracking-wider text-slate-400 font-medium">
 							Mean
 						</p>
-						<p class="text-lg md:text-xl font-extrabold text-white">
+						<p class="text-lg md:text-xl font-extrabold text-foreground">
 							{{ meanValue !== null ? meanValue : '-' }}
 						</p>
 					</div>
@@ -165,7 +165,7 @@ function getPositionStyles(index: number, total: number) {
 						<p class="text-[10px] uppercase tracking-wider text-slate-400 font-medium">
 							Median
 						</p>
-						<p class="text-lg md:text-xl font-extrabold text-white">
+						<p class="text-lg md:text-xl font-extrabold text-foreground">
 							{{ medianValue !== null ? medianValue : '-' }}
 						</p>
 					</div>
@@ -180,13 +180,13 @@ function getPositionStyles(index: number, total: number) {
 						<div
 							v-for="item in votesBreakdown"
 							:key="item.value"
-							class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 flex items-center gap-1 font-mono font-bold"
+							class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-300 flex items-center gap-1 font-mono font-bold"
 							:title="`${item.count} vote(s) (${item.percentage}%)`"
 						>
-							<p class="text-white text-xs">
+							<p class="text-foreground text-xs font-bold">
 								{{ item.value }}
 							</p>
-							<p class="text-indigo-400 font-normal">
+							<p class="text-indigo-600 dark:text-indigo-400 font-normal">
 								x{{ item.count }}
 							</p>
 						</div>

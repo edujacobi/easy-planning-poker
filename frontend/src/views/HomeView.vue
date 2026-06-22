@@ -22,9 +22,9 @@ const alertMessage = ref("");
 function showAlert(msg: string) {
 	alertMessage.value = msg;
 
-	setTimeout(() => {
-		if (alertMessage.value === msg) alertMessage.value = "";
-	}, 10_000);
+	// setTimeout(() => {
+	// 	if (alertMessage.value === msg) alertMessage.value = "";
+	// }, 50_000);
 }
 
 onMounted(() => {

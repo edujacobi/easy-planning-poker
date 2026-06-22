@@ -21,7 +21,7 @@ const forwardedProps = useForwardProps(delegatedProps);
 		:class="
 			cn(
 				'text-base leading-none font-medium cn-font-heading',
-				'text-white text-lg',
+				'text-foreground text-lg',
 				props.class,
 			)
 		"

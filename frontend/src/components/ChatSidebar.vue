@@ -61,7 +61,7 @@ onMounted(() => {
 				class="text-indigo-400"
 				:size="16"
 			/>
-			<h3 class="text-sm font-bold text-white">
+			<h3 class="text-sm font-bold text-foreground">
 				Chat and logs
 			</h3>
 		</FlexRow>

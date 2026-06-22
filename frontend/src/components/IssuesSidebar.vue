@@ -18,6 +18,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import ScrollArea from "./ui/scroll-area/ScrollArea.vue";
+import OutlineButton from "./dx/OutlineButton.vue";
 
 const roomStore = useRoomStore();
 
@@ -104,7 +105,7 @@ function getTaskClass(task: any) {
 
 	return [
 		isActive
-			? "bg-indigo-600/15 border border-indigo-500/30 text-indigo-300 ps-3 transition-all duration-150"
+			? "bg-indigo-600/15 border border-indigo-500/30 text-indigo-600 dark:text-indigo-300 ps-3 transition-all duration-150"
 			: "bg-background/30 hover:bg-background/60 text-muted-foreground border border-transparent transition-all duration-150",
 		isAdmin.value ? "cursor-pointer" : "cursor-default",
 	];
@@ -133,7 +134,7 @@ function getTaskPointsDisplay(task: any) {
 						class="text-indigo-400"
 						:size="16"
 					/>
-					<h3 class="text-sm font-bold text-white">
+					<h3 class="text-sm font-bold text-foreground">
 						Stories and Tasks
 					</h3>
 				</FlexRow>
@@ -207,7 +208,7 @@ function getTaskPointsDisplay(task: any) {
 								class="flex-1 min-w-0"
 							>
 								<span
-									class="truncate text-slate-200"
+									class="truncate text-foreground"
 									:title="task.title"
 								>
 									{{ task.title }}
@@ -275,13 +276,13 @@ function getTaskPointsDisplay(task: any) {
 			</FlexCol>
 
 			<!-- Edit Stories/Tasks Button -->
-			<Button
-				class="w-full bg-slate-850 hover:bg-slate-800 border border-slate-700/60 text-slate-200"
+			<OutlineButton
+				class="w-full"
 				@click="showEditModal = true"
 			>
 				<Pencil class="w-3.5 h-3.5" />
 				Edit Stories/Tasks
-			</Button>
+			</OutlineButton>
 
 			<!-- Finish session if all tasks voted -->
 			<Button
