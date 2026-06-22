@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useRoomStore } from "../stores/room";
-import GlassCard from "./dx/GlassCard.vue";
 
 const roomStore = useRoomStore();
 

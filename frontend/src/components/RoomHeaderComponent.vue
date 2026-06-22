@@ -68,11 +68,17 @@ const inviteButtonText = computed(() =>
 
 			<OutlineButton
 				size="sm"
-				@click="toggleTheme"
 				aria-label="Toggle theme"
+				@click="toggleTheme"
 			>
-				<Sun v-if="isDark" class="h-4 w-4" />
-				<Moon v-else class="h-4 w-4" />
+				<Sun
+					v-if="isDark"
+					class="h-4 w-4"
+				/>
+				<Moon
+					v-else
+					class="h-4 w-4"
+				/>
 			</OutlineButton>
 		</FlexRow>
 	</GlassCard>

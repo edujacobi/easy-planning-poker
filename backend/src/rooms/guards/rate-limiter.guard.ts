@@ -1,4 +1,10 @@
-import { Injectable, CanActivate, ExecutionContext, HttpException, HttpStatus } from "@nestjs/common";
+import {
+	Injectable,
+	CanActivate,
+	ExecutionContext,
+	HttpException,
+	HttpStatus,
+} from "@nestjs/common";
 
 @Injectable()
 export class RateLimiterGuard implements CanActivate {
@@ -6,7 +12,8 @@ export class RateLimiterGuard implements CanActivate {
 
 	canActivate(context: ExecutionContext): boolean {
 		const request = context.switchToHttp().getRequest();
-		const ip = request.ip || request.headers["x-forwarded-for"] || "unknown";
+		const ip =
+			request.ip || request.headers["x-forwarded-for"] || "unknown";
 		const now = Date.now();
 		const windowMs = 60 * 1000; // 1 minute window
 		const maxRequests = 100; // limit to 100 requests per minute

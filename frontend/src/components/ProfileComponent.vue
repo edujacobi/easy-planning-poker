@@ -26,11 +26,17 @@ const { isDark, toggleTheme } = useTheme();
 			<OutlineButton
 				size="sm"
 				class="shrink-0"
-				@click="toggleTheme"
 				aria-label="Toggle theme"
+				@click="toggleTheme"
 			>
-				<Sun v-if="isDark" class="h-4 w-4" />
-				<Moon v-else class="h-4 w-4" />
+				<Sun
+					v-if="isDark"
+					class="h-4 w-4"
+				/>
+				<Moon
+					v-else
+					class="h-4 w-4"
+				/>
 			</OutlineButton>
 		</CardHeader>
 
