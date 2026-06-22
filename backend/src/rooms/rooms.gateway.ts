@@ -326,6 +326,30 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		this.server.to(roomId).emit("sessionStateChange", { mode: "voting" });
 	}
 
+	// Edit stories event (Admin Only)
+	// ponytail: updates database stories/tasks and broadcasts/forces client reload.
+	@SubscribeMessage("editStories")
+	async handleEditStories(
+		@ConnectedSocket() client: Socket,
+		@MessageBody()
+		data: { stories: Array<{ id?: string; title: string; tasks: Array<{ id?: string; title: string }> }> },
+	) {
+		const { roomId, userId } = client.handshake.query as {
+			roomId: string;
+			userId: string;
+		};
+		if (!roomId) return;
+
+		const room = await this.roomsService.getRoomDetails(roomId);
+		if (room.adminUserId !== userId) return;
+
+		await this.roomsService.editStories(roomId, data.stories);
+
+		// Force client details reload and state sync
+		this.server.to(roomId).emit("reloadRoomDetails");
+		await this.broadcastRoomState(roomId);
+	}
+
 	// Broadcasts standard room state in-memory structure
 	private async broadcastRoomState(roomId: string) {
 		const state = this.roomsService.getOrCreateActiveState(roomId);

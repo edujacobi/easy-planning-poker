@@ -185,6 +185,111 @@ export class RoomsService {
 		return addedStories;
 	}
 
+	// Edit room stories and tasks by reconciling with existing database records
+	async editStories(
+		roomId: string,
+		storiesData: Array<{
+			id?: string;
+			title: string;
+			tasks: Array<{ id?: string; title: string }>;
+		}>,
+	) {
+		const existingStories = await this.storyModel.findAll({
+			where: { roomId },
+			include: [{ model: Task }],
+		});
+
+		const receivedStoryIds = new Set(
+			storiesData.map((s) => s.id).filter(Boolean),
+		);
+
+		// 1. Delete stories no longer present
+		for (const est of existingStories) {
+			if (!receivedStoryIds.has(est.id)) {
+				await est.destroy();
+			}
+		}
+
+		// 2. Upsert stories and reconcile tasks
+		let storyOrder = 0;
+		for (const s of storiesData) {
+			let story: Story;
+			const foundStory = s.id
+				? existingStories.find((est) => est.id === s.id)
+				: undefined;
+			if (foundStory) {
+				story = foundStory;
+				story.title = s.title;
+				story.order = storyOrder++;
+				await story.save();
+			} else {
+				story = await this.storyModel.create({
+					roomId,
+					title: s.title,
+					order: storyOrder++,
+				} as any);
+			}
+
+			const existingTasks = story.tasks || [];
+			const receivedTaskIds = new Set(
+				s.tasks.map((t) => t.id).filter(Boolean),
+			);
+
+			// Delete tasks no longer present
+			for (const et of existingTasks) {
+				if (!receivedTaskIds.has(et.id)) {
+					await et.destroy();
+				}
+			}
+
+			// Upsert tasks
+			let taskOrder = 0;
+			for (const t of s.tasks) {
+				if (t.id) {
+					const task = existingTasks.find((et) => et.id === t.id);
+					if (task) {
+						task.title = t.title;
+						task.order = taskOrder++;
+						await task.save();
+					} else {
+						await this.taskModel.create({
+							storyId: story.id,
+							title: t.title,
+							order: taskOrder++,
+							points: null,
+						} as any);
+					}
+				} else {
+					await this.taskModel.create({
+						storyId: story.id,
+						title: t.title,
+						order: taskOrder++,
+						points: null,
+					} as any);
+				}
+			}
+		}
+
+		// 3. Re-evaluate activeTaskId if it was deleted
+		const state = this.getOrCreateActiveState(roomId);
+		if (state.activeTaskId) {
+			const activeTaskExists = await this.taskModel.findByPk(
+				state.activeTaskId,
+			);
+			if (!activeTaskExists) {
+				const nextTaskId = await this.findNextUnvotedTaskId(roomId);
+				state.activeTaskId = nextTaskId;
+				state.votes = {};
+				state.votingRevealed = false;
+			}
+		} else {
+			const nextTaskId = await this.findNextUnvotedTaskId(roomId);
+			if (nextTaskId) {
+				state.activeTaskId = nextTaskId;
+			}
+		}
+	}
+
 	// Join a room (update database participant and memory connections)
 	async joinParticipant(
 		roomId: string,

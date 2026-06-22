@@ -325,5 +325,15 @@ export const useRoomStore = defineStore("room", {
 			this.sessionMode = "voting"; // reset to voting screen
 			this.isFinishModalDismissed = false;
 		},
+
+		editStories(
+			stories: Array<{
+				id?: string;
+				title: string;
+				tasks: Array<{ id?: string; title: string }>;
+			}>,
+		) {
+			this.socket?.emit("editStories", { stories });
+		},
 	},
 });

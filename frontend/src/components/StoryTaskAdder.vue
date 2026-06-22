@@ -10,16 +10,32 @@ import Label from './ui/label/Label.vue';
 
 const props = defineProps<{
     label: string;
-	stories: Array<{ title: string; tasks: string[] }>;
+	stories: Array<{ title: string; tasks: any[] }>;
 }>();
 
 const stories = ref(props.stories);
 
+function getTaskTitle(task: any): string {
+	return typeof task === "string" ? task : task.title;
+}
+
+function setTaskTitle(storyIndex: number, taskIndex: number, val: string) {
+	const task = stories.value[storyIndex].tasks[taskIndex];
+	if (typeof task === "string") {
+		stories.value[storyIndex].tasks[taskIndex] = val;
+	} else {
+		task.title = val;
+	}
+}
 
 function addStory() {
+	const hasObjectTasks = stories.value.length > 0 &&
+		stories.value[0].tasks.length > 0 &&
+		typeof stories.value[0].tasks[0] !== "string";
+
     stories.value.push({
-		title: `New Story ${props.stories.length + 1}`,
-		tasks: ["Task 1"],
+		title: `New Story ${stories.value.length + 1}`,
+		tasks: hasObjectTasks ? [{ title: "Task 1" }] : ["Task 1"],
 	});
 }
 
@@ -28,8 +44,13 @@ function removeStory(index: number) {
 }
 
 function addTask(storyIndex: number) {
-	stories.value[storyIndex].tasks.push(
-		`Task ${stories.value[storyIndex].tasks.length + 1}`,
+	const currentTasks = stories.value[storyIndex].tasks;
+	const hasObjectTasks = currentTasks.length > 0 && typeof currentTasks[0] !== "string";
+
+	currentTasks.push(
+		hasObjectTasks
+			? { title: `Task ${currentTasks.length + 1}` }
+			: `Task ${currentTasks.length + 1}`
 	);
 }
 
@@ -88,9 +109,10 @@ function removeTask(storyIndex: number, taskIndex: number) {
 							Task {{ tIdx + 1 }}
 						</span>
 						<Input
-							v-model="story.tasks[tIdx]"
+							:model-value="getTaskTitle(story.tasks[tIdx])"
 							placeholder="Task Title..."
 							class="text-xs h-7"
+							@update:model-value="val => setTaskTitle(sIdx, tIdx, String(val))"
 						/>
 						<DeleteButton
 							title="Remove Task"

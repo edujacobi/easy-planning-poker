@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Check, CheckCircle2, Eye, LayoutList } from "lucide-vue-next";
+import { Check, CheckCircle2, Eye, LayoutList, Pencil } from "lucide-vue-next";
 import { computed, ref, watch } from "vue";
 import { useRoomStore, type StoryItem } from "../stores/room";
 import Divider from "./dx/Divider.vue";
@@ -7,6 +7,7 @@ import FlexCol from "./dx/FlexCol.vue";
 import FlexRow from "./dx/FlexRow.vue";
 import GlassCard from "./dx/GlassCard.vue";
 import PrimaryButton from "./dx/PrimaryButton.vue";
+import RoomEditStoriesComponent from "./RoomEditStoriesComponent.vue";
 import {
 	Accordion,
 	AccordionContent,
@@ -24,6 +25,8 @@ const activeTaskId = computed(() => roomStore.activeTaskId);
 const activeTask = computed(() => roomStore.activeTask);
 const votingRevealed = computed(() => roomStore.votingRevealed);
 const isAdmin = computed(() => roomStore.isAdmin);
+
+const showEditModal = ref(false);
 
 // State for point confirmation
 const confirmedPointsInput = ref<string>("");
@@ -271,6 +274,15 @@ function getTaskPointsDisplay(task: any) {
 				</FlexCol>
 			</FlexCol>
 
+			<!-- Edit Stories/Tasks Button -->
+			<Button
+				class="w-full bg-slate-850 hover:bg-slate-800 border border-slate-700/60 text-slate-200"
+				@click="showEditModal = true"
+			>
+				<Pencil class="w-3.5 h-3.5" />
+				Edit Stories/Tasks
+			</Button>
+
 			<!-- Finish session if all tasks voted -->
 			<Button
 				v-if="checkAllTasksVoted"
@@ -281,4 +293,9 @@ function getTaskPointsDisplay(task: any) {
 			</Button>
 		</FlexCol>
 	</GlassCard>
+
+	<RoomEditStoriesComponent
+		v-if="showEditModal"
+		@close="showEditModal = false"
+	/>
 </template>

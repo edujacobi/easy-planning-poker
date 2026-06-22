@@ -64,24 +64,24 @@ const endMessage = computed(() =>
 
 <template>
 	<PageWrapper>
+		<RoomResultsComponent
+			v-if="roomStore.isSessionFinished"
+			:sessionFinishedData="roomStore.sessionFinishedData"
+		/>
+
+		<RoomAddStoriesComponent
+			v-if="roomStore.sessionMode === 'add_stories'"
+			:isAdmin="roomStore.isAdmin"
+			:endMessage="endMessage"
+			@submit="handleAddStories"
+			@cancel="roomStore.finishSession('cancel')"
+		/>
+
 		<RoomProfileSetupComponent
 			v-if="showProfileSetup"
 			v-model:nickname="localNickname"
 			v-model:emoji="localEmoji"
 			@submit="submitProfile"
-		/>
-
-		<RoomResultsComponent
-			v-else-if="roomStore.isSessionFinished"
-			:sessionFinishedData="roomStore.sessionFinishedData"
-		/>
-
-		<RoomAddStoriesComponent
-			v-else-if="roomStore.sessionMode === 'add_stories'"
-			:isAdmin="roomStore.isAdmin"
-			:endMessage="endMessage"
-			@submit="handleAddStories"
-			@cancel="roomStore.finishSession('cancel')"
 		/>
 
 		<FlexCol
