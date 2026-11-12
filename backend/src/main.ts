@@ -1,10 +1,14 @@
 import { NestFactory } from "@nestjs/core";
 import { ValidationPipe } from "@nestjs/common";
+import { NestExpressApplication } from "@nestjs/platform-express";
 import { AppModule } from "./app.module";
 import { RateLimiterGuard } from "./rooms/guards/rate-limiter.guard";
 
 async function bootstrap() {
-	const app = await NestFactory.create(AppModule);
+	const app = await NestFactory.create<NestExpressApplication>(AppModule);
+	if (process.env.TRUST_PROXY === "loopback") {
+		app.set("trust proxy", "loopback");
+	}
 	app.useGlobalPipes(
 		new ValidationPipe({ whitelist: true, transform: true }),
 	);
