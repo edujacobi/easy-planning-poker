@@ -2,6 +2,7 @@
 import { Check, Copy, FileCheck, Home } from "lucide-vue-next";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
+import { jiraExport } from "../lib/jira-export";
 import { useRoomStore, type SessionResults } from "../stores/room";
 import Divider from "./dx/Divider.vue";
 import FlexRow from "./dx/FlexRow.vue";
@@ -14,6 +15,7 @@ import OutlineButton from "./dx/OutlineButton.vue";
 import PreFormattedText from "./dx/PreFormattedText.vue";
 import PrimaryButton from "./dx/PrimaryButton.vue";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { Input } from "./ui/input";
 
 const props = defineProps<{
 	sessionFinishedData: SessionResults | null;
@@ -22,9 +24,15 @@ const props = defineProps<{
 const router = useRouter();
 const roomStore = useRoomStore();
 const isCopiedMd = ref(false);
+const isCopiedJson = ref(false);
+const projectKey = ref("");
 const copyError = ref("");
 const priorityError = ref("");
 const priorityPending = ref(false);
+
+const jiraJson = computed(() =>
+	jiraExport(projectKey.value, props.sessionFinishedData?.tasks ?? []),
+);
 
 async function updatePriority(event: Event, task: SessionResults["tasks"][number]) {
 	const select = event.target;
@@ -52,6 +60,19 @@ async function copyResultsMarkdown() {
 		copyError.value = "";
 		isCopiedMd.value = true;
 		setTimeout(() => (isCopiedMd.value = false), 2_000);
+	} catch {
+		copyError.value = "Could not copy to the clipboard. Please copy the preview manually.";
+	}
+}
+
+async function copyResultsJson() {
+	if (!projectKey.value.trim()) return;
+
+	try {
+		await navigator.clipboard.writeText(jiraJson.value);
+		copyError.value = "";
+		isCopiedJson.value = true;
+		setTimeout(() => (isCopiedJson.value = false), 2_000);
 	} catch {
 		copyError.value = "Could not copy to the clipboard. Please copy the preview manually.";
 	}
@@ -154,6 +175,22 @@ const copyButtonText = computed(() =>
 					</p>
 				</div>
 
+				<FormGroup
+					id="jiraProjectKey"
+					label="Jira project key:"
+				>
+					<Input
+						id="jiraProjectKey"
+						v-model="projectKey"
+						placeholder="Project key"
+					/>
+				</FormGroup>
+				<FormGroup
+					id="jsonPreview"
+					label="Jira JSON preview:"
+				>
+					<PreFormattedText :markdownContent="jiraJson" />
+				</FormGroup>
 				<p
 					v-if="copyError"
 					role="alert"
@@ -176,6 +213,16 @@ const copyButtonText = computed(() =>
 					<Check v-if="isCopiedMd" />
 					<Copy v-else />
 					{{ copyButtonText }}
+				</PrimaryButton>
+
+				<PrimaryButton
+					class="flex-1 py-6 text-sm"
+					:disabled="!projectKey.trim() || priorityPending"
+					@click="copyResultsJson"
+				>
+					<Check v-if="isCopiedJson" />
+					<Copy v-else />
+					{{ isCopiedJson ? "JSON Copied!" : "Copy Jira JSON" }}
 				</PrimaryButton>
 
 				<OutlineButton
