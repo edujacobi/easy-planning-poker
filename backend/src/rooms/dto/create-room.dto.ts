@@ -7,8 +7,20 @@ import {
 	ValidateNested,
 	MinLength,
 	MaxLength,
+	IsOptional,
 } from "class-validator";
-import { Type } from "class-transformer";
+import { plainToInstance, Transform, Type } from "class-transformer";
+
+class TaskDto {
+	@IsString()
+	@IsNotEmpty()
+	@MaxLength(255)
+	title: string;
+
+	@IsOptional()
+	@IsString()
+	description?: string;
+}
 
 class StoryDto {
 	@IsString()
@@ -17,8 +29,18 @@ class StoryDto {
 	title: string;
 
 	@IsArray()
-	@IsString({ each: true })
-	tasks: string[];
+	@Transform(({ value }: { value: unknown }) =>
+		Array.isArray(value)
+			? value.map((task: unknown) =>
+					typeof task === "string"
+						? plainToInstance(TaskDto, { title: task })
+						: task,
+				)
+			: value,
+	)
+	@ValidateNested({ each: true })
+	@Type(() => TaskDto)
+	tasks: TaskDto[];
 }
 
 export class CreateRoomDto {

@@ -25,8 +25,21 @@ export interface TaskItem {
 	id: string;
 	storyId: string;
 	title: string;
+	description: string;
 	order: number;
 	points: number | null;
+}
+
+export interface TaskInput {
+	id?: string;
+	title: string;
+	description: string;
+}
+
+export interface StoryInput {
+	id?: string;
+	title: string;
+	tasks: TaskInput[];
 }
 
 export interface StoryItem {
@@ -58,10 +71,19 @@ export interface ChatMsg {
 
 export interface SessionResults {
 	markdown: string;
+	tasks: Array<{
+		id: string;
+		title: string;
+		description: string;
+		points: number | null;
+		priority: TaskPriority;
+	}>;
 	participantsCount: number;
 	totalStories: number;
 	totalPoints: number;
 }
+
+export type TaskPriority = "Low" | "Medium" | "High";
 
 export const useRoomStore = defineStore("room", {
 	state: () => ({
@@ -135,7 +157,7 @@ export const useRoomStore = defineStore("room", {
 		async createRoom(
 			title: string,
 			voteType: "linear" | "fibonacci",
-			stories: Array<{ title: string; tasks: string[] }>,
+			stories: StoryInput[],
 		): Promise<string> {
 			this.isLoading = true;
 			this.error = null;
@@ -269,6 +291,15 @@ export const useRoomStore = defineStore("room", {
 			this.socket.on("sessionFinished", (results: SessionResults) => {
 				this.sessionFinishedData = results;
 			});
+			this.socket.on(
+				"taskPriorityChanged",
+				(data: { taskId: string; priority: TaskPriority }) => {
+					const task = this.sessionFinishedData?.tasks.find(
+						(item) => item.id === data.taskId,
+					);
+					if (task) task.priority = data.priority;
+				},
+			);
 		},
 
 		disconnectSocket() {
@@ -288,6 +319,16 @@ export const useRoomStore = defineStore("room", {
 		},
 
 		// WS Emit Actions
+		async setTaskPriority(taskId: string, priority: TaskPriority) {
+			if (!this.socket?.connected) {
+				throw new Error("Not connected to the room.");
+			}
+			const result: { error?: string } = await this.socket
+				.timeout(5000)
+				.emitWithAck("setTaskPriority", { taskId, priority });
+			if (result.error) throw new Error(result.error);
+		},
+
 		castVote(vote: string) {
 			this.socket?.emit("castVote", { vote });
 		},
@@ -320,19 +361,13 @@ export const useRoomStore = defineStore("room", {
 			this.socket?.emit("finishSession", { decision });
 		},
 
-		addStories(stories: Array<{ title: string; tasks: string[] }>) {
+		addStories(stories: StoryInput[]) {
 			this.socket?.emit("addStories", { stories });
 			this.sessionMode = "voting"; // reset to voting screen
 			this.isFinishModalDismissed = false;
 		},
 
-		editStories(
-			stories: Array<{
-				id?: string;
-				title: string;
-				tasks: Array<{ id?: string; title: string }>;
-			}>,
-		) {
+		editStories(stories: StoryInput[]) {
 			this.socket?.emit("editStories", { stories });
 		},
 	},

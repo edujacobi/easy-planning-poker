@@ -34,6 +34,13 @@ export class Task extends Model<Task> {
 	declare title: string;
 
 	@Column({
+		type: DataType.TEXT,
+		allowNull: false,
+		defaultValue: "",
+	})
+	declare description: string;
+
+	@Column({
 		type: DataType.INTEGER,
 		allowNull: false,
 		defaultValue: 0,

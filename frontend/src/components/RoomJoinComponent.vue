@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ArrowRight, Play } from "lucide-vue-next";
 import { ref } from "vue";
+import type { StoryInput } from "../stores/room";
 import Alert from "./dx/Alert.vue";
 import Divider from "./dx/Divider.vue";
 import FlexCol from "./dx/FlexCol.vue";
@@ -22,7 +23,7 @@ const emit = defineEmits<{
 		payload: {
 			title: string;
 			voteType: "linear" | "fibonacci";
-			stories: Array<{ title: string; tasks: string[] }>;
+			stories: StoryInput[];
 		},
 	): void;
 }>();
@@ -57,10 +58,13 @@ const voteTypeData = ref<Array<{
 ]);
 
 
-const stories = ref<Array<{ title: string; tasks: string[] }>>([
+const stories = ref<StoryInput[]>([
 	{
 		title: "Sprint Backlog Item 1",
-		tasks: ["Task 1: Design", "Task 2: Implementation"],
+		tasks: [
+			{ title: "Task 1: Design", description: "" },
+			{ title: "Task 2: Implementation", description: "" },
+		],
 	},
 ]);
 

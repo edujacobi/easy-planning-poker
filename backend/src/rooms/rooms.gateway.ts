@@ -8,7 +8,11 @@ import {
 	OnGatewayDisconnect,
 } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
-import { RoomsService } from "./rooms.service";
+import {
+	RoomsService,
+	type TaskInput,
+	type TaskPriority,
+} from "./rooms.service";
 
 @WebSocketGateway({
 	cors: {
@@ -71,6 +75,10 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 		// Broadcast updated state
 		await this.broadcastRoomState(roomId);
+
+		const results =
+			this.roomsService.getOrCreateActiveState(roomId).sessionResults;
+		if (results) client.emit("sessionFinished", results);
 	}
 
 	// Handle user disconnection
@@ -264,15 +272,21 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		if (room.adminUserId !== userId) return;
 
 		if (data.decision === "add_stories") {
+			this.roomsService.getOrCreateActiveState(roomId).sessionResults =
+				null;
 			this.server
 				.to(roomId)
 				.emit("sessionStateChange", { mode: "add_stories" });
 		} else if (data.decision === "cancel") {
+			this.roomsService.getOrCreateActiveState(roomId).sessionResults =
+				null;
 			this.server
 				.to(roomId)
 				.emit("sessionStateChange", { mode: "voting" });
 		} else if (data.decision === "finish") {
 			const results = await this.roomsService.generateRoomResults(roomId);
+			this.roomsService.getOrCreateActiveState(roomId).sessionResults =
+				results;
 
 			// Write stats to chat
 			const statsMsg = `SESSION COMPLETED! Total Stories: ${results.totalStories}, Total Points Voted: ${results.totalPoints}. Participants: ${results.participantsCount}`;
@@ -300,12 +314,50 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		}
 	}
 
+	@SubscribeMessage("setTaskPriority")
+	async handleSetTaskPriority(
+		@ConnectedSocket() client: Socket,
+		@MessageBody() data: { taskId?: unknown; priority?: unknown } | null,
+	): Promise<{ error?: string }> {
+		const { roomId, userId } = client.handshake.query as {
+			roomId?: string;
+			userId?: string;
+		};
+		if (
+			!roomId ||
+			!userId ||
+			typeof data?.taskId !== "string" ||
+			(data.priority !== "Low" &&
+				data.priority !== "Medium" &&
+				data.priority !== "High")
+		) {
+			return { error: "Invalid priority update." };
+		}
+
+		const room = await this.roomsService.getRoomDetails(roomId);
+		if (room.adminUserId !== userId) {
+			return { error: "Only the room creator can change priority." };
+		}
+		const results =
+			this.roomsService.getOrCreateActiveState(roomId).sessionResults;
+		const task = results?.tasks.find((item) => item.id === data.taskId);
+		if (!task) return { error: "Task not found in the finished session." };
+
+		const priority: TaskPriority = data.priority;
+		task.priority = priority;
+		this.server.to(roomId).emit("taskPriorityChanged", {
+			taskId: task.id,
+			priority,
+		});
+		return {};
+	}
+
 	// Add more stories event (Admin Only)
 	@SubscribeMessage("addStories")
 	async handleAddStories(
 		@ConnectedSocket() client: Socket,
 		@MessageBody()
-		data: { stories: Array<{ title: string; tasks: string[] }> },
+		data: { stories: Array<{ title: string; tasks: TaskInput[] }> },
 	) {
 		const { roomId, userId } = client.handshake.query as {
 			roomId: string;
@@ -335,7 +387,11 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			stories: Array<{
 				id?: string;
 				title: string;
-				tasks: Array<{ id?: string; title: string }>;
+				tasks: Array<{
+					id?: string;
+					title: string;
+					description?: string;
+				}>;
 			}>;
 		},
 	) {

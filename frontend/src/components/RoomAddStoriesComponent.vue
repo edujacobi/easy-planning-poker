@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import type { StoryInput } from "../stores/room";
 import Alert from "../components/dx/Alert.vue";
 import StoryTaskAdder from "./StoryTaskAdder.vue";
 import Divider from "./dx/Divider.vue";
@@ -16,12 +17,12 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-	(e: "submit", stories: Array<{ title: string; tasks: string[] }>): void;
+	(e: "submit", stories: StoryInput[]): void;
 	(e: "cancel"): void;
 }>();
 
-const newStories = ref<Array<{ title: string; tasks: string[] }>>([
-	{ title: "New Backlog Item", tasks: ["Task 1"] },
+const newStories = ref<StoryInput[]>([
+	{ title: "New Backlog Item", tasks: [{ title: "Task 1", description: "" }] },
 ]);
 
 const alertMessage = ref("");
@@ -44,7 +45,7 @@ function handleSubmit() {
 
 	emit("submit", newStories.value);
 	// Reset local state
-	newStories.value = [{ title: "New Backlog Item", tasks: ["Task 1"] }];
+	newStories.value = [{ title: "New Backlog Item", tasks: [{ title: "Task 1", description: "" }] }];
 }
 </script>
 

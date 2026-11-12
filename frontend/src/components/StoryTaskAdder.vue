@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Plus, Trash2 } from "lucide-vue-next";
 import { ref } from 'vue';
+import type { StoryInput } from "../stores/room";
 import DeleteButton from './dx/DeleteButton.vue';
 import FlexCol from './dx/FlexCol.vue';
 import FlexRow from './dx/FlexRow.vue';
@@ -10,32 +11,15 @@ import Label from './ui/label/Label.vue';
 
 const props = defineProps<{
     label: string;
-	stories: Array<{ title: string; tasks: any[] }>;
+	stories: StoryInput[];
 }>();
 
 const stories = ref(props.stories);
 
-function getTaskTitle(task: any): string {
-	return typeof task === "string" ? task : task.title;
-}
-
-function setTaskTitle(storyIndex: number, taskIndex: number, val: string) {
-	const task = stories.value[storyIndex].tasks[taskIndex];
-	if (typeof task === "string") {
-		stories.value[storyIndex].tasks[taskIndex] = val;
-	} else {
-		task.title = val;
-	}
-}
-
 function addStory() {
-	const hasObjectTasks = stories.value.length > 0 &&
-		stories.value[0].tasks.length > 0 &&
-		typeof stories.value[0].tasks[0] !== "string";
-
     stories.value.push({
 		title: `New Story ${stories.value.length + 1}`,
-		tasks: hasObjectTasks ? [{ title: "Task 1" }] : ["Task 1"],
+		tasks: [{ title: "Task 1", description: "" }],
 	});
 }
 
@@ -45,13 +29,7 @@ function removeStory(index: number) {
 
 function addTask(storyIndex: number) {
 	const currentTasks = stories.value[storyIndex].tasks;
-	const hasObjectTasks = currentTasks.length > 0 && typeof currentTasks[0] !== "string";
-
-	currentTasks.push(
-		hasObjectTasks
-			? { title: `Task ${currentTasks.length + 1}` }
-			: `Task ${currentTasks.length + 1}`
-	);
+	currentTasks.push({ title: `Task ${currentTasks.length + 1}`, description: "" });
 }
 
 function removeTask(storyIndex: number, taskIndex: number) {
@@ -100,20 +78,33 @@ function removeTask(storyIndex: number, taskIndex: number) {
 					class="pl-6 space-y-2 border-l pb-3"
 				>
 					<FlexRow
-						v-for="(_, tIdx) in story.tasks"
+						v-for="(task, tIdx) in story.tasks"
 						:key="tIdx"
+						class="items-start"
 					>
 						<span
 							class="text-sm text-muted-foreground font-mono shrink-0"
 						>
 							Task {{ tIdx + 1 }}
 						</span>
-						<Input
-							:model-value="getTaskTitle(story.tasks[tIdx])"
-							placeholder="Task Title..."
-							class="text-xs h-7"
-							@update:model-value="val => setTaskTitle(sIdx, tIdx, String(val))"
-						/>
+						<FlexCol
+							class="flex-1"
+							gap="2"
+						>
+							<Input
+								v-model="task.title"
+								:aria-label="`Task ${tIdx + 1} title`"
+								placeholder="Task Title..."
+								class="text-xs h-7"
+							/>
+							<textarea
+								v-model="task.description"
+								:aria-label="`Task ${tIdx + 1} description`"
+								placeholder="Task description (optional)..."
+								class="w-full rounded-md border bg-background px-3 py-2 text-xs"
+								rows="2"
+							/>
+						</FlexCol>
 						<DeleteButton
 							title="Remove Task"
 							@click="removeTask(sIdx, tIdx)"

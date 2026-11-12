@@ -7,11 +7,29 @@ import { Task } from "./models/task.model";
 import { Participant } from "./models/participant.model";
 import { ChatMessage } from "./models/chat-message.model";
 
+export type TaskInput = string | { title: string; description?: string };
+export type TaskPriority = "Low" | "Medium" | "High";
+
+export interface RoomResults {
+	markdown: string;
+	tasks: Array<{
+		id: string;
+		title: string;
+		description: string;
+		points: number | null;
+		priority: TaskPriority;
+	}>;
+	participantsCount: number;
+	totalStories: number;
+	totalPoints: number;
+}
+
 export interface ActiveRoomState {
 	activeTaskId: string | null;
 	votingRevealed: boolean;
 	votes: Record<string, string>; // userId -> voteValue
 	connectedUsers: Set<string>; // Set of active userIds in room
+	sessionResults: RoomResults | null;
 }
 
 @Injectable()
@@ -49,6 +67,7 @@ export class RoomsService {
 				votingRevealed: false,
 				votes: {},
 				connectedUsers: new Set<string>(),
+				sessionResults: null,
 			};
 			this.activeRoomStates.set(roomId, state);
 		}
@@ -62,7 +81,7 @@ export class RoomsService {
 		creatorUserId: string;
 		creatorNickname: string;
 		creatorEmoji: string;
-		stories: Array<{ title: string; tasks: string[] }>;
+		stories: Array<{ title: string; tasks: TaskInput[] }>;
 	}): Promise<Room> {
 		const room = await this.roomModel.create({
 			title: data.title,
@@ -88,10 +107,12 @@ export class RoomsService {
 			} as any);
 
 			let taskOrder = 0;
-			for (const tTitle of s.tasks) {
+			for (const t of s.tasks) {
 				await this.taskModel.create({
 					storyId: story.id,
-					title: tTitle,
+					title: typeof t === "string" ? t : t.title,
+					description:
+						typeof t === "string" ? "" : (t.description ?? ""),
 					order: taskOrder++,
 					points: null,
 				} as any);
@@ -140,7 +161,7 @@ export class RoomsService {
 	// Add more stories to an existing room
 	async addStories(
 		roomId: string,
-		stories: Array<{ title: string; tasks: string[] }>,
+		stories: Array<{ title: string; tasks: TaskInput[] }>,
 	) {
 		const existingStories = await this.storyModel.findAll({
 			where: { roomId },
@@ -157,10 +178,12 @@ export class RoomsService {
 
 			let taskOrder = 0;
 			const addedTasks: Task[] = [];
-			for (const tTitle of s.tasks) {
+			for (const t of s.tasks) {
 				const task = await this.taskModel.create({
 					storyId: story.id,
-					title: tTitle,
+					title: typeof t === "string" ? t : t.title,
+					description:
+						typeof t === "string" ? "" : (t.description ?? ""),
 					order: taskOrder++,
 					points: null,
 				} as any);
@@ -191,7 +214,7 @@ export class RoomsService {
 		storiesData: Array<{
 			id?: string;
 			title: string;
-			tasks: Array<{ id?: string; title: string }>;
+			tasks: Array<{ id?: string; title: string; description?: string }>;
 		}>,
 	) {
 		const existingStories = await this.storyModel.findAll({
@@ -249,12 +272,15 @@ export class RoomsService {
 					const task = existingTasks.find((et) => et.id === t.id);
 					if (task) {
 						task.title = t.title;
+						if (t.description !== undefined)
+							task.description = t.description;
 						task.order = taskOrder++;
 						await task.save();
 					} else {
 						await this.taskModel.create({
 							storyId: story.id,
 							title: t.title,
+							description: t.description ?? "",
 							order: taskOrder++,
 							points: null,
 						} as any);
@@ -263,6 +289,7 @@ export class RoomsService {
 					await this.taskModel.create({
 						storyId: story.id,
 						title: t.title,
+						description: t.description ?? "",
 						order: taskOrder++,
 						points: null,
 					} as any);
@@ -432,7 +459,7 @@ export class RoomsService {
 	}
 
 	// Generate statistics for all tasks and stories in a room
-	async generateRoomResults(roomId: string) {
+	async generateRoomResults(roomId: string): Promise<RoomResults> {
 		const room = await this.getRoomDetails(roomId);
 		const participants = await this.participantModel.findAll({
 			where: { roomId },
@@ -483,6 +510,15 @@ export class RoomsService {
 
 		return {
 			markdown: md,
+			tasks: room.stories.flatMap((story) =>
+				story.tasks.map((task) => ({
+					id: task.id,
+					title: task.title,
+					description: task.description,
+					points: task.points,
+					priority: "Medium",
+				})),
+			),
 			participantsCount: participants.length,
 			totalStories: room.stories.length,
 			totalPoints: totalSessionPoints,

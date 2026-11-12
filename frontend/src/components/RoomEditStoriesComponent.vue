@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRoomStore } from "../stores/room";
+import type { StoryInput } from "../stores/room";
 import Alert from "./dx/Alert.vue";
 import Divider from "./dx/Divider.vue";
 import FlexCol from "./dx/FlexCol.vue";
@@ -16,11 +17,7 @@ const emit = defineEmits<{
 
 const roomStore = useRoomStore();
 
-const localStories = ref<Array<{
-	id?: string;
-	title: string;
-	tasks: Array<{ id?: string; title: string }>;
-}>>(
+const localStories = ref<StoryInput[]>(
 	roomStore.room?.stories
 		? JSON.parse(JSON.stringify(roomStore.room.stories))
 		: []
@@ -37,7 +34,7 @@ function showAlert(msg: string) {
 
 function handleSave() {
 	const canSave = localStories.value.length > 0 &&
-		localStories.value.every((s) => s.title.trim() && s.tasks.length > 0 && s.tasks.every(t => (typeof t === 'string' ? t : t.title).trim()));
+		localStories.value.every((s) => s.title.trim() && s.tasks.length > 0 && s.tasks.every(t => t.title.trim()));
 
 	if (!canSave) {
 		showAlert("Please verify all stories and tasks have titles, and each story has at least one task.");

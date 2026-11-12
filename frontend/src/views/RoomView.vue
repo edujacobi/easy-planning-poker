@@ -13,6 +13,7 @@ import RoomProfileSetupComponent from "../components/RoomProfileSetupComponent.v
 import RoomResultsComponent from "../components/RoomResultsComponent.vue";
 import RoomTable from "../components/RoomTable.vue";
 import { useRoomStore } from "../stores/room";
+import type { StoryInput } from "../stores/room";
 
 const route = useRoute();
 const roomStore = useRoomStore();
@@ -51,7 +52,7 @@ async function submitProfile() {
 	await roomStore.connectSocket(roomId);
 }
 
-function handleAddStories(stories: Array<{ title: string; tasks: string[] }>) {
+function handleAddStories(stories: StoryInput[]) {
 	roomStore.addStories(stories);
 }
 

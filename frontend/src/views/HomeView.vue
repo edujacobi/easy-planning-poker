@@ -8,6 +8,7 @@ import HeaderComponent from "../components/HeaderComponent.vue";
 import ProfileComponent from "../components/ProfileComponent.vue";
 import RoomJoinComponent from "../components/RoomJoinComponent.vue";
 import { useRoomStore } from "../stores/room";
+import type { StoryInput } from "../stores/room";
 
 const router = useRouter();
 const roomStore = useRoomStore();
@@ -55,7 +56,7 @@ function handleJoinRoom(roomId: string) {
 async function handleCreateRoom(payload: {
 	title: string;
 	voteType: "linear" | "fibonacci";
-	stories: Array<{ title: string; tasks: string[] }>;
+	stories: StoryInput[];
 }) {
 	if (!saveProfile()) {
 		return showAlert("Please enter a nickname first.");
