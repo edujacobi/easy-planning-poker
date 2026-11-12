@@ -7,14 +7,14 @@ import { useRoomStore, type SessionResults } from "../stores/room";
 import Divider from "./dx/Divider.vue";
 import FlexRow from "./dx/FlexRow.vue";
 import FormGroup from "./dx/FormGroup.vue";
-import GlassCard from "./dx/GlassCard.vue";
 import Grid from "./dx/Grid.vue";
 import HighlightedIcon from "./dx/HighlightedIcon.vue";
 import HighlightedValue from "./dx/HighlightedValue.vue";
 import OutlineButton from "./dx/OutlineButton.vue";
 import PreFormattedText from "./dx/PreFormattedText.vue";
 import PrimaryButton from "./dx/PrimaryButton.vue";
-import { CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { CardContent, CardHeader } from "./ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
 import { Input } from "./ui/input";
 
 const props = defineProps<{
@@ -84,21 +84,24 @@ const copyButtonText = computed(() =>
 </script>
 
 <template>
-	<div
-		class="fixed inset-0 backdrop-blur-md bg-background/80 flex items-center justify-center z-50 p-4 md:p-8"
-	>
-		<GlassCard class="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+	<Dialog :open="true">
+		<DialogContent
+			:show-close-button="false"
+			class="sm:max-w-2xl max-h-[90vh] overflow-y-auto"
+			@escape-key-down.prevent
+			@pointer-down-outside.prevent
+		>
 			<CardHeader class="text-center">
 				<HighlightedIcon>
 					<FileCheck class="w-6 h-6" />
 				</HighlightedIcon>
-				<CardTitle size="big">
+				<DialogTitle class="text-2xl font-bold">
 					Session concluded!
-				</CardTitle>
-				<CardDescription>
+				</DialogTitle>
+				<DialogDescription>
 					Here are the compiled statistics and results of the Planning
 					Poker session.
-				</CardDescription>
+				</DialogDescription>
 			</CardHeader>
 
 			<Divider />
@@ -124,14 +127,14 @@ const copyButtonText = computed(() =>
 				</Grid>
 
 				<!-- RESULTS.md Preview block -->
-				<FormGroup
-					id="markdownPreview"
-					label="RESULTS.md Preview:"
-				>
+				<section aria-label="RESULTS.md preview">
+					<h3 class="text-sm font-medium">
+						RESULTS.md Preview:
+					</h3>
 					<PreFormattedText
 						:markdownContent="sessionFinishedData?.markdown"
 					/>
-				</FormGroup>
+				</section>
 
 				<div class="space-y-2">
 					<h3 class="text-sm font-medium">
@@ -185,12 +188,12 @@ const copyButtonText = computed(() =>
 						placeholder="Project key"
 					/>
 				</FormGroup>
-				<FormGroup
-					id="jsonPreview"
-					label="Jira JSON preview:"
-				>
+				<section aria-label="Jira JSON preview">
+					<h3 class="text-sm font-medium">
+						Jira JSON preview:
+					</h3>
 					<PreFormattedText :markdownContent="jiraJson" />
-				</FormGroup>
+				</section>
 				<p
 					v-if="copyError"
 					role="alert"
@@ -233,6 +236,6 @@ const copyButtonText = computed(() =>
 					Return
 				</OutlineButton>
 			</FlexRow>
-		</GlassCard>
-	</div>
+		</DialogContent>
+	</Dialog>
 </template>

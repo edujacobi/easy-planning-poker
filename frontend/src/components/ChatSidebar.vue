@@ -54,7 +54,11 @@ onMounted(() => {
 </script>
 
 <template>
-	<GlassCard class="w-full flex flex-col h-full p-4 gap-1 max-h-[70dvh]">
+	<GlassCard
+		class="w-full flex flex-col h-full p-4 gap-1 max-h-[70dvh]"
+		role="region"
+		aria-label="Chat and logs"
+	>
 		<!-- Title header -->
 		<FlexRow>
 			<Users
@@ -73,7 +77,11 @@ onMounted(() => {
 			ref="scrollAreaRef"
 			class="flex-1 min-h-[220px]"
 		>
-			<FlexCol>
+			<FlexCol
+				role="log"
+				aria-label="Chat messages"
+				aria-live="polite"
+			>
 				<FlexRow
 					v-for="msg in chatMessages"
 					:key="msg.id"
@@ -100,12 +108,14 @@ onMounted(() => {
 		<FlexRow>
 			<Input
 				v-model="typedMessage"
+				aria-label="Message"
 				placeholder="Type a message or vote discussion..."
 				class="text-xs h-9"
 				@keyup.enter="sendMessage"
 			/>
 			<PrimaryButton
 				size="icon-sm"
+				aria-label="Send message"
 				@click="sendMessage"
 			>
 				<Send />

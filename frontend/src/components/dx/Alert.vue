@@ -41,7 +41,10 @@ const emit = defineEmits<{
 						{{ props.alertMessage }}
 					</AlertDescription>
 				</FlexCol>
-				<DestrutiveButton @click="emit('close')">
+				<DestrutiveButton
+					aria-label="Dismiss warning"
+					@click="emit('close')"
+				>
 					<X />
 				</DestrutiveButton>
 			</FlexRow>

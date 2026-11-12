@@ -14,7 +14,6 @@ import SelectableItem from "./dx/SelectableItem.vue";
 import SwitchButton from "./dx/SwitchButton.vue";
 import StoryTaskAdder from "./StoryTaskAdder.vue";
 import { Input } from "./ui/input";
-import { Label } from "./ui/label";
 
 const emit = defineEmits<{
 	(e: "join-room", roomId: string): void;
@@ -114,6 +113,8 @@ function createRoom() {
 			<Grid
 				columns="2"
 				class="px-3"
+				role="group"
+				aria-label="Room action"
 			> 
 				<SwitchButton 
 					:active="activeTab === 'join'"
@@ -173,10 +174,14 @@ function createRoom() {
 
 					<!-- Deck selection -->
 					<FlexCol>
-						<Label>
+						<p class="text-sm font-medium">
 							Choose vote style
-						</Label>
-						<Grid columns="2">
+						</p>
+						<Grid
+							columns="2"
+							role="group"
+							aria-label="Choose vote style"
+						>
 							<SelectableItem
 								v-for="(type, idx) in voteTypeData"
 								:key="idx"
@@ -186,7 +191,7 @@ function createRoom() {
 								<p class="font-bold text-foreground">
 									{{ type.label }}
 								</p>
-								<p class="text-sm text-slate-400">
+								<p class="text-sm text-muted-foreground">
 									{{ type.cards.join(", ") }}
 								</p>
 							</SelectableItem>

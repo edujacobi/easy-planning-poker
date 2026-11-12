@@ -7,6 +7,8 @@ defineProps<{
 
 <template>
 	<button
+		type="button"
+		:aria-pressed="active"
 		class="p-4 rounded-xl border bg-background text-left transition-all duration-150"
 		:class="
 			active

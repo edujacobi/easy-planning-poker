@@ -16,7 +16,7 @@ defineProps<Props>();
 		:type="type || 'button'"
 		:disabled="disabled"
 		:size="size"
-		class="bg-transparent hover:bg-red-600/10 text-red-400 hover:text-red-300 transition-all duration-150 active:scale-[0.98]"
+		class="bg-transparent hover:bg-red-600/10 text-red-700 dark:text-red-400 transition-all duration-150 active:scale-[0.98]"
 	>
 		<slot />
 	</Button>

@@ -5,6 +5,7 @@ const props = defineProps<{
 </script>
 <template>
 	<div
+		tabindex="0"
 		class="bg-background rounded-xl border p-4 h-[35dvh] overflow-y-auto text-left w-full"
 	>
 		<pre

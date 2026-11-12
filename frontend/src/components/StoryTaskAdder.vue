@@ -7,7 +7,6 @@ import FlexCol from './dx/FlexCol.vue';
 import FlexRow from './dx/FlexRow.vue';
 import OutlineButton from './dx/OutlineButton.vue';
 import { Input } from './ui/input';
-import Label from './ui/label/Label.vue';
 
 const props = defineProps<{
     label: string;
@@ -42,9 +41,9 @@ function removeTask(storyIndex: number, taskIndex: number) {
 	<FlexCol
 		gap="3"
 	>
-		<Label>
+		<p class="text-sm font-medium">
 			{{ label }}
-		</Label>
+		</p>
 
 		<!-- List of input stories -->
 		<div class="space-y-4 pr-1">
@@ -62,11 +61,13 @@ function removeTask(storyIndex: number, taskIndex: number) {
 					</div>
 					<Input
 						v-model="story.title"
+						:aria-label="`Story ${sIdx + 1} title`"
 						placeholder="Story title..."
 						class="text-sm h-8"
 					/>
 					<DeleteButton
 						title="Remove Story"
+						:aria-label="`Remove story ${sIdx + 1}`"
 						@click="removeStory(sIdx)"
 					>
 						<Trash2 :size="20"/>
@@ -80,10 +81,10 @@ function removeTask(storyIndex: number, taskIndex: number) {
 					<FlexRow
 						v-for="(task, tIdx) in story.tasks"
 						:key="tIdx"
-						class="items-start"
+						align="start"
 					>
 						<span
-							class="text-sm text-muted-foreground font-mono shrink-0"
+							class="text-sm text-muted-foreground font-mono shrink-0 mt-1"
 						>
 							Task {{ tIdx + 1 }}
 						</span>
@@ -93,13 +94,13 @@ function removeTask(storyIndex: number, taskIndex: number) {
 						>
 							<Input
 								v-model="task.title"
-								:aria-label="`Task ${tIdx + 1} title`"
+								:aria-label="`Story ${sIdx + 1}, task ${tIdx + 1} title`"
 								placeholder="Task Title..."
 								class="text-xs h-7"
 							/>
 							<textarea
 								v-model="task.description"
-								:aria-label="`Task ${tIdx + 1} description`"
+								:aria-label="`Story ${sIdx + 1}, task ${tIdx + 1} description`"
 								placeholder="Task description (optional)..."
 								class="w-full rounded-md border bg-background px-3 py-2 text-xs"
 								rows="2"
@@ -107,6 +108,8 @@ function removeTask(storyIndex: number, taskIndex: number) {
 						</FlexCol>
 						<DeleteButton
 							title="Remove Task"
+							:aria-label="`Remove story ${sIdx + 1}, task ${tIdx + 1}`"
+							class="mt-1"
 							@click="removeTask(sIdx, tIdx)"
 						>
 							<Trash2 :size="16" />
@@ -115,6 +118,7 @@ function removeTask(storyIndex: number, taskIndex: number) {
 
 					<OutlineButton
 						size="sm"
+						:aria-label="`Add task to story ${sIdx + 1}`"
 						@click="addTask(sIdx)"
 					>
 						<Plus />

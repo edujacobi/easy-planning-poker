@@ -28,7 +28,7 @@ const localEmoji = ref("");
 onMounted(async () => {
 	roomStore.loadUser();
 
-	if (!roomStore.user || !roomStore.user.nickname) {
+	if (!roomStore.user?.nickname) {
 		showProfileSetup.value = true;
 
 		if (roomStore.user) {

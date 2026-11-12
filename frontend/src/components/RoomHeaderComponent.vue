@@ -47,7 +47,7 @@ const inviteButtonText = computed(() =>
 				<h2 class="text-lg font-bold text-foreground leading-none">
 					{{ roomTitle }}
 				</h2>
-				<p class="text-xs text-slate-500 font-mono mt-1">
+				<p class="text-xs text-muted-foreground font-mono mt-1">
 					Room ID: {{ roomId }}
 				</p>
 			</div>

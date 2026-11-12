@@ -30,7 +30,7 @@ const createdAtTitle = computed(() => {
 					{{ message.nickname }}
 				</span>
 				<span
-					class="text-xs text-slate-400 dark:text-slate-600"
+					class="text-xs text-muted-foreground"
 					:title="createdAtTitle"
 				>
 					{{ createdAt }}

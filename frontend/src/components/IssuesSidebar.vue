@@ -141,7 +141,7 @@ function getTaskPointsDisplay(task: any) {
 				<FlexRow
 					v-if="checkAllTasksVoted"
 					align="center"
-					class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/20"
+					class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-xs font-bold border border-emerald-500/20"
 				>
 					<CheckCircle2 class="w-3 h-3" />
 					All voted
@@ -179,7 +179,7 @@ function getTaskPointsDisplay(task: any) {
 							<FlexRow
 								class="text-xs px-2 py-0.5 rounded-full font-mono shrink-0"
 								:class="checkAllTasksVotedFromStory(story) ? 
-									'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 
+									'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20' : 
 									'bg-muted text-muted-foreground'
 								"
 							>
@@ -195,11 +195,13 @@ function getTaskPointsDisplay(task: any) {
 						class="px-3 pt-1 pb-3 space-y-1.5 border-t"
 					>
 						<!-- Nested Tasks -->
-						<FlexRow
+						<component
+							:is="isAdmin ? 'button' : 'div'"
 							v-for="task in story.tasks"
 							:key="task.id"
-							justify="between"
-							class="w-full min-w-0 p-2 rounded-lg text-xs transition duration-200 select-none"
+							:type="isAdmin ? 'button' : undefined"
+							:aria-pressed="isAdmin ? activeTaskId === task.id : undefined"
+							class="flex items-center justify-between gap-2 text-left w-full min-w-0 p-2 rounded-lg text-xs transition duration-200 select-none"
 							:class="getTaskClass(task)"
 							@click="selectTask(task.id)"
 						>
@@ -221,7 +223,7 @@ function getTaskPointsDisplay(task: any) {
 							<div class="text-xs font-mono text-muted-foreground shrink-0">
 								{{ getTaskPointsDisplay(task) }}
 							</div>
-						</FlexRow>
+						</component>
 					</AccordionContent>
 				</AccordionItem>
 			</Accordion>
@@ -255,18 +257,20 @@ function getTaskPointsDisplay(task: any) {
 
 				<!-- 2. Point confirmation (displayed only after votes are revealed) -->
 				<FlexCol v-else>
-					<Label>
+					<Label for="confirmed-points">
 						Confirm Story points for Task:
 					</Label>
 					<FlexRow>
 						<Input
+							id="confirmed-points"
 							v-model="confirmedPointsInput"
 							placeholder="e.g. 3, 5, or empty for skipped"
 							class="text-xs h-9"
 						/>
 						<Button
 							size="icon-sm"
-							class="bg-emerald-600 hover:bg-emerald-500 text-white shrink-0"
+							aria-label="Confirm story points"
+							class="bg-emerald-700 hover:bg-emerald-800 text-white shrink-0"
 							@click="confirmPoints"
 						>
 							<Check />
@@ -287,7 +291,7 @@ function getTaskPointsDisplay(task: any) {
 			<!-- Finish session if all tasks voted -->
 			<Button
 				v-if="checkAllTasksVoted"
-				class="w-full bg-emerald-600 hover:bg-emerald-500 text-white"
+				class="w-full bg-emerald-700 hover:bg-emerald-800 text-white"
 				@click="triggerFinishSession"
 			>
 				Finish active session

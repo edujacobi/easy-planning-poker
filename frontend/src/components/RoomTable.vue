@@ -97,7 +97,7 @@ function getPlayerVoteDisplay(player: any) {
 
 function getPlayerVotedCardClass() {
 	return votingRevealed.value
-		? "bg-background border-indigo-500 text-indigo-400 shadow-indigo-500/10"
+		? "bg-background border-indigo-500 text-indigo-700 dark:text-indigo-300 shadow-indigo-500/10"
 		: "bg-indigo-700 border-indigo-500 text-white";
 }
 
@@ -110,7 +110,7 @@ function getPlayerBadgeClass(player: any) {
 }
 
 function getPlayerNameClass(player: any) {
-	return player.isOnline ? "text-foreground" : "text-muted-foreground opacity-40";
+	return player.isOnline ? "text-foreground" : "text-muted-foreground";
 }
 
 function getPlayerRoleText(player: any) {
@@ -156,7 +156,7 @@ function getPositionStyles(index: number, total: number) {
 				<template v-if="votingRevealed">
 					<div class="flex items-center gap-6 mt-1">
 						<div class="flex flex-col items-center">
-							<p class="text-[10px] uppercase tracking-wider text-slate-400 font-medium">
+							<p class="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
 								Mean
 							</p>
 							<p class="text-lg md:text-xl font-extrabold text-foreground">
@@ -165,7 +165,7 @@ function getPositionStyles(index: number, total: number) {
 						</div>
 						<div class="w-px h-6 bg-border"></div>
 						<div class="flex flex-col items-center">
-							<p class="text-[10px] uppercase tracking-wider text-slate-400 font-medium">
+							<p class="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
 								Median
 							</p>
 							<p class="text-lg md:text-xl font-extrabold text-foreground">
@@ -176,7 +176,7 @@ function getPositionStyles(index: number, total: number) {
 
 					<!-- Votes Breakdown -->
 					<div class="w-full mt-2 flex flex-col items-center">
-						<p class="text-[10px] uppercase tracking-wider text-slate-400 font-medium mb-1">
+						<p class="text-[10px] uppercase tracking-wider text-muted-foreground font-medium mb-1">
 							Votes Breakdown
 						</p>
 						<div class="flex flex-wrap gap-1.5 justify-center max-w-full max-h-[50px] overflow-y-auto px-2 py-0.5 scrollbar-thin">
@@ -200,7 +200,10 @@ function getPositionStyles(index: number, total: number) {
 					<p class="text-xs uppercase tracking-wider text-indigo-600 dark:text-indigo-400 font-semibold">
 						{{ sessionSubtitle }}
 					</p>
-					<p class="text-slate-400 text-xs animate-pulse">
+					<p
+						class="text-muted-foreground text-xs animate-pulse"
+						role="status"
+					>
 						{{ tableStatusText }}
 					</p>
 				</template>
@@ -250,7 +253,7 @@ function getPositionStyles(index: number, total: number) {
 						</p>
 						<p
 							class="text-xs text-muted-foreground"
-							:class="player.isAdmin ? 'text-amber-500' : ''"
+							:class="player.isAdmin ? 'text-amber-800 dark:text-amber-400' : ''"
 						>
 							{{ getPlayerRoleText(player) }}
 						</p>

@@ -5,10 +5,10 @@ import Alert from "../components/dx/Alert.vue";
 import StoryTaskAdder from "./StoryTaskAdder.vue";
 import Divider from "./dx/Divider.vue";
 import FlexRow from "./dx/FlexRow.vue";
-import GlassCard from "./dx/GlassCard.vue";
 import OutlineButton from "./dx/OutlineButton.vue";
 import PrimaryButton from "./dx/PrimaryButton.vue";
-import { CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { CardContent, CardHeader } from "./ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
 import Spinner from "./dx/Spinner.vue";
 
 const props = defineProps<{
@@ -37,7 +37,7 @@ function showAlert(msg: string) {
 function handleSubmit() {
 	const canSubmit = newStories.value.length > 0 &&
 		newStories.value.every((s) => s.tasks.length > 0);
-	
+
 	if (!canSubmit) {
 		showAlert("Please enter at least one story and verify all stories contain tasks.");
 		return;
@@ -50,55 +50,51 @@ function handleSubmit() {
 </script>
 
 <template>
-	<div
-		class="fixed inset-0 bg-background/80 backdrop-blur-md flex items-center justify-center z-50 p-4"
+	<output
+		v-if="!props.isAdmin"
+		class="fixed top-4 right-4 z-50 flex items-center gap-3 rounded-xl border bg-background p-4 text-foreground shadow-lg"
 	>
-		<Alert
-			:alertMessage="alertMessage"
-			variant="destructive"
-			@close="alertMessage = ''"
-		/>
-		
-		<GlassCard
-			class="w-full max-w-xl max-h-[85vh] overflow-y-auto flex flex-col"
+		<Spinner borderColor="amber" />
+		<span>Admin is currently adding more stories and tasks.</span>
+	</output>
+	<Dialog
+		v-else
+		:open="true"
+		@update:open="(open) => { if (!open) emit('cancel'); }"
+	>
+		<DialogContent
+			:show-close-button="false"
+			class="sm:max-w-xl max-h-[85vh] overflow-y-auto flex flex-col"
+			@pointer-down-outside.prevent
 		>
+			<Alert
+				:alertMessage="alertMessage"
+				variant="destructive"
+				@close="alertMessage = ''"
+			/>
+
 			<CardHeader>
-				<CardTitle>
+				<DialogTitle>
 					Add more Stories and Tasks
-				</CardTitle>
-				<CardDescription>
+				</DialogTitle>
+				<DialogDescription>
 					{{ props.endMessage }}
-				</CardDescription>
+				</DialogDescription>
 			</CardHeader>
 
 			<Divider/>
 
 			<CardContent class="flex-1 px-6">
-				<!-- Non-Admin waiting screen -->
-				<section
-					v-if="!props.isAdmin"
-					class="text-center py-6 space-y-3"
-				>
-					<Spinner borderColor="amber" />
-					<p class="text-sm text-muted-foreground">
-						Admin is currently adding more Stories to estimation
-						backlog...
-					</p>
-				</section>
-
-				<!-- Admin Add stories form list -->
 				<StoryTaskAdder
-					v-else
 					label="New Stories"
 					:stories="newStories"
 					class="py-2"
 				/>
 			</CardContent>
-			
-			<Divider v-if="props.isAdmin"/>
+
+			<Divider/>
 
 			<FlexRow
-				v-if="props.isAdmin"
 				class="px-3 gap-3"
 			>
 				<PrimaryButton
@@ -111,6 +107,6 @@ function handleSubmit() {
 					Cancel
 				</OutlineButton>
 			</FlexRow>
-		</GlassCard>
-	</div>
+		</DialogContent>
+	</Dialog>
 </template>

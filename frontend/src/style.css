@@ -100,3 +100,21 @@ html {
 	-ms-overflow-style: none;
 	scrollbar-width: none;
 }
+
+:where(button, input, textarea, select, a, [tabindex]):focus-visible {
+	outline: 3px solid #4338ca;
+	outline-offset: 2px;
+}
+
+.dark :where(button, input, textarea, select, a, [tabindex]):focus-visible {
+	outline-color: #a5b4fc;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*, *::before, *::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}

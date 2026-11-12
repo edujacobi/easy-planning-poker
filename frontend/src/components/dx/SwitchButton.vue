@@ -7,6 +7,8 @@
 
 <template>
 	<button
+		type="button"
+		:aria-pressed="active"
 		class="py-2.5 px-4 rounded-xl text-sm font-medium transition-all duration-150"
 		:class="
 			active

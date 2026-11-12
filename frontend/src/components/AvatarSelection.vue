@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Label from "./ui/label/Label.vue";
+import { useId } from "vue";
 import FlexCol from "./dx/FlexCol.vue";
 import FlexRow from "./dx/FlexRow.vue";
 import FormGroup from "./dx/FormGroup.vue";
@@ -8,6 +8,7 @@ import SelectableItem from "./dx/SelectableItem.vue";
 
 const selectedNickname = defineModel<string>("nickname", { required: true });
 const selectedEmoji = defineModel<string>("emoji", { required: true });
+const nicknameId = useId();
 
 const emojis = [
 	"😎",
@@ -44,11 +45,11 @@ const emit = defineEmits<{
 <template>
 	<!-- Nickname input -->
 	<FormGroup
-		id="localNickname"
+		:id="nicknameId"
 		label="Nickname"
 	>
 		<Input
-			id="localNickname"
+			:id="nicknameId"
 			v-model="selectedNickname"
 			placeholder="Type your name..."
 			maxlength="20"
@@ -62,9 +63,9 @@ const emit = defineEmits<{
 		align="end"
 	>
 		<FlexCol>
-			<Label>
+			<p class="text-sm font-medium">
 				Avatar
-			</Label>
+			</p>
 			<div
 				class="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl border"
 			>
@@ -73,11 +74,16 @@ const emit = defineEmits<{
 		</FlexCol>
 
 		<FlexCol>
-			<div class="flex flex-wrap gap-1 justify-start">
+			<div
+				class="flex flex-wrap gap-1 justify-start"
+				role="group"
+				aria-label="Choose an avatar"
+			>
 				<SelectableItem
 					v-for="emoji in emojis"
 					:key="emoji"
 					:active="selectedEmoji === emoji"
+					:aria-label="`Avatar ${emoji}`"
 					class="w-10 h-10 flex items-center justify-center text-xl"
 					@click="selectedEmoji = emoji"
 				>

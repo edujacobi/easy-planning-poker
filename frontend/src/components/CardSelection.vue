@@ -90,12 +90,16 @@ function getCardClass(card: string) {
 			gap="3"
 			wrap
 			align="center"
+			role="group"
+			aria-label="Voting cards"
 		>
 			<button
 				v-for="card in cardOptions"
 				:key="card"
 				type="button"
 				:disabled="roomStore.votingRevealed || !roomStore.activeTaskId"
+				:aria-pressed="activeVote === card"
+				:aria-label="card === '?' ? 'Vote unknown' : `Vote ${card}`"
 				class="h-16 w-11 md:h-20 md:w-14 rounded-xl border-2 flex items-center justify-center font-bold text-lg md:text-xl transition-all duration-150 select-none shadow-md"
 				:class="getCardClass(card)"
 				@click="selectCard(card)"

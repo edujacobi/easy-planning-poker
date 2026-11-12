@@ -6,10 +6,10 @@ import Alert from "./dx/Alert.vue";
 import Divider from "./dx/Divider.vue";
 import FlexCol from "./dx/FlexCol.vue";
 import FlexRow from "./dx/FlexRow.vue";
-import GlassCard from "./dx/GlassCard.vue";
 import OutlineButton from "./dx/OutlineButton.vue";
 import PrimaryButton from "./dx/PrimaryButton.vue";
 import StoryTaskAdder from "./StoryTaskAdder.vue";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
 
 const emit = defineEmits<{
 	(e: "close"): void;
@@ -47,25 +47,28 @@ function handleSave() {
 </script>
 
 <template>
-	<div
-		class="fixed inset-0 bg-background/80 backdrop-blur-md flex items-center justify-center z-[100] p-4 text-slate-200"
+	<Dialog
+		:open="true"
+		@update:open="(open) => { if (!open) emit('close'); }"
 	>
-		<Alert
-			:alertMessage="alertMessage"
-			variant="destructive"
-			@close="alertMessage = ''"
-		/>
-
-		<GlassCard
-			class="w-full max-w-xl max-h-[85vh] flex flex-col p-6 gap-4"
+		<DialogContent
+			:show-close-button="false"
+			class="sm:max-w-xl max-h-[85vh] flex flex-col p-6 gap-4"
+			@pointer-down-outside.prevent
 		>
+			<Alert
+				:alertMessage="alertMessage"
+				variant="destructive"
+				@close="alertMessage = ''"
+			/>
+
 			<FlexCol gap="1">
-				<h2 class="text-lg font-bold text-foreground">
+				<DialogTitle class="text-lg font-bold">
 					Edit Stories and Tasks
-				</h2>
-				<p class="text-xs text-slate-400">
+				</DialogTitle>
+				<DialogDescription>
 					Modify details, remove, or append new stories and tasks. Saving updates database real-time.
-				</p>
+				</DialogDescription>
 			</FlexCol>
 
 			<Divider />
@@ -91,6 +94,6 @@ function handleSave() {
 					Save
 				</PrimaryButton>
 			</FlexRow>
-		</GlassCard>
-	</div>
+		</DialogContent>
+	</Dialog>
 </template>

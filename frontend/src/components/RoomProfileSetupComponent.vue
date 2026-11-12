@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import AvatarSelection from "./AvatarSelection.vue";
-import GlassCard from "./dx/GlassCard.vue";
 import PrimaryButton from "./dx/PrimaryButton.vue";
-import { CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { CardContent, CardHeader } from "./ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
 
 const localNickname = defineModel<string>("nickname", { required: true });
 const localEmoji = defineModel<string>("emoji", { required: true });
@@ -13,17 +13,20 @@ const emit = defineEmits<{
 </script>
 
 <template>
-	<div
-		class="fixed inset-0 backdrop-blur-md flex items-center justify-center z-50 p-4"
-	>
-		<GlassCard class="w-full max-w-2xl">
+	<Dialog :open="true">
+		<DialogContent
+			:show-close-button="false"
+			class="sm:max-w-2xl max-h-[90vh] overflow-y-auto"
+			@escape-key-down.prevent
+			@pointer-down-outside.prevent
+		>
 			<CardHeader>
-				<CardTitle>
+				<DialogTitle>
 					Configure your profile
-				</CardTitle>
-				<CardDescription>
+				</DialogTitle>
+				<DialogDescription>
 					Join room estimation session by setting your nickname.
-				</CardDescription>
+				</DialogDescription>
 			</CardHeader>
 
 			<CardContent>
@@ -40,6 +43,6 @@ const emit = defineEmits<{
 					Enter Room
 				</PrimaryButton>
 			</CardContent>
-		</GlassCard>
-	</div>
+		</DialogContent>
+	</Dialog>
 </template>
