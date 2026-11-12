@@ -8,6 +8,7 @@ import { Story } from "./models/story.model";
 import { Task } from "./models/task.model";
 import { Participant } from "./models/participant.model";
 import { ChatMessage } from "./models/chat-message.model";
+import { RoomCreationRateLimiterGuard } from "./guards/rate-limiter.guard";
 
 @Module({
 	imports: [
@@ -20,7 +21,7 @@ import { ChatMessage } from "./models/chat-message.model";
 		]),
 	],
 	controllers: [RoomsController],
-	providers: [RoomsService, RoomsGateway],
+	providers: [RoomsService, RoomsGateway, RoomCreationRateLimiterGuard],
 	exports: [RoomsService],
 })
 export class RoomsModule {}

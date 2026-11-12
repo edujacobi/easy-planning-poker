@@ -170,6 +170,8 @@ export const useRoomStore = defineStore("room", {
 				}),
 			});
 
+			if (res.status === 429)
+				throw new Error("Too many requests. Please try again later.");
 			if (!res.ok) throw new Error("Failed to create room");
 			const data = await res.json();
 

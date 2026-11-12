@@ -1,12 +1,22 @@
-import { Controller, Post, Get, Body, Param, Query } from "@nestjs/common";
+import {
+	Controller,
+	Post,
+	Get,
+	Body,
+	Param,
+	Query,
+	UseGuards,
+} from "@nestjs/common";
 import { RoomsService } from "./rooms.service";
 import { CreateRoomDto } from "./dto/create-room.dto";
+import { RoomCreationRateLimiterGuard } from "./guards/rate-limiter.guard";
 
 @Controller("api/rooms")
 export class RoomsController {
 	constructor(private readonly roomsService: RoomsService) {}
 
 	@Post()
+	@UseGuards(RoomCreationRateLimiterGuard)
 	async createRoom(@Body() body: CreateRoomDto) {
 		const room = await this.roomsService.createRoom(body);
 		return { id: room.id };

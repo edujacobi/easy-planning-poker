@@ -53,3 +53,5 @@ npm run test:e2e
 
 > [!NOTE]
 > The backend runs on port `3000` by default. To start both the client and server concurrently, run `npm run dev` in the root folder.
+
+Room creation is limited to ten requests per IP address per hour, in addition to the general request limit. This in-memory limit resets on restart and applies separately to each backend instance. Behind a reverse proxy, Express sees the proxy's IP unless trusted proxies are explicitly configured; do not trust forwarded headers from untrusted clients.

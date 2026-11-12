@@ -70,7 +70,12 @@ async function handleCreateRoom(payload: {
 		);
 		router.push(`/room/${newRoomId}`);
 	} catch (e) {
-		showAlert("Error creating room. Please try again.");
+		showAlert(
+			e instanceof Error &&
+				e.message === "Too many requests. Please try again later."
+				? e.message
+				: "Error creating room. Please try again.",
+		);
 	}
 }
 </script>
