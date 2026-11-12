@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Check, Copy, FileCheck, Home } from "lucide-vue-next";
+import { Check, Copy, FileCheck, Home } from "@lucide/vue";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { jiraExport } from "../lib/jira-export";

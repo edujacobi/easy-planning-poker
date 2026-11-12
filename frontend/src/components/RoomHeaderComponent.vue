@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowLeft, Check, Share2, Sun, Moon } from "lucide-vue-next";
+import { ArrowLeft, Check, Share2, Sun, Moon } from "@lucide/vue";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import FlexRow from "./dx/FlexRow.vue";

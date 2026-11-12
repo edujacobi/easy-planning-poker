@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Check, CheckCircle2, Eye, LayoutList, Pencil } from "lucide-vue-next";
+import { Check, CheckCircle2, Eye, LayoutList, Pencil } from "@lucide/vue";
 import { computed, ref, watch } from "vue";
 import { useRoomStore, type StoryItem } from "../stores/room";
 import Divider from "./dx/Divider.vue";

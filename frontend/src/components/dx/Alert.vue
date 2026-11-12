@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AlertTriangle } from "lucide-vue-next";
+import { AlertTriangle, X } from "@lucide/vue";
 import {
 	Alert,
 	AlertTitle,
@@ -9,7 +9,6 @@ import {
 import DestrutiveButton from "./DestrutiveButton.vue";
 import FlexCol from "./FlexCol.vue";
 import FlexRow from "./FlexRow.vue";
-import { X } from "@lucide/vue";
 
 const props = defineProps<{
 	alertMessage: string;

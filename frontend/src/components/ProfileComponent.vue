@@ -3,7 +3,7 @@ import AvatarSelection from "./AvatarSelection.vue";
 import GlassCard from "./dx/GlassCard.vue";
 import OutlineButton from "./dx/OutlineButton.vue";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import { Sun, Moon } from "lucide-vue-next";
+import { Sun, Moon } from "@lucide/vue";
 import { useTheme } from "../lib/theme";
 
 const nickname = defineModel<string>("nickname", { required: true });

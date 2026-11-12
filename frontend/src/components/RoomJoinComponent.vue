@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowRight, Play } from "lucide-vue-next";
+import { ArrowRight, Play } from "@lucide/vue";
 import { ref } from "vue";
 import type { StoryInput } from "../stores/room";
 import Alert from "./dx/Alert.vue";

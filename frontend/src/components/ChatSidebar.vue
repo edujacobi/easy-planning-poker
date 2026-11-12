@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Send, Users } from "lucide-vue-next";
+import { Send, Users } from "@lucide/vue";
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { useRoomStore } from "../stores/room.ts";
 import ChatMessageSystem from "./dx/ChatMessageSystem.vue";

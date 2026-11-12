@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Plus, Trash2 } from "lucide-vue-next";
+import { Plus, Trash2 } from "@lucide/vue";
 import { ref } from 'vue';
 import type { StoryInput } from "../stores/room";
 import DeleteButton from './dx/DeleteButton.vue';

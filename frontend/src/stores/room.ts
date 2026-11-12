@@ -92,14 +92,11 @@ export const useRoomStore = defineStore("room", {
 		players: [] as Player[],
 		activeTaskId: null as string | null,
 		votingRevealed: false,
-		votesCount: 0,
 		chatMessages: [] as ChatMsg[],
 		socket: null as Socket | null,
 		sessionMode: "voting" as "voting" | "add_stories",
 		sessionFinishedData: null as SessionResults | null,
 		isFinishModalDismissed: false,
-		isLoading: false,
-		error: null as string | null,
 		myHashedUserId: null as string | null,
 	}),
 
@@ -159,61 +156,46 @@ export const useRoomStore = defineStore("room", {
 			voteType: "linear" | "fibonacci",
 			stories: StoryInput[],
 		): Promise<string> {
-			this.isLoading = true;
-			this.error = null;
+			if (!this.user) this.loadUser();
+			const res = await fetch(`${BACKEND_URL}/api/rooms`, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					title,
+					voteType,
+					creatorUserId: this.user?.userId,
+					creatorNickname: this.user?.nickname,
+					creatorEmoji: this.user?.emoji,
+					stories,
+				}),
+			});
 
-			try {
-				if (!this.user) this.loadUser();
-				const res = await fetch(`${BACKEND_URL}/api/rooms`, {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({
-						title,
-						voteType,
-						creatorUserId: this.user?.userId,
-						creatorNickname: this.user?.nickname,
-						creatorEmoji: this.user?.emoji,
-						stories,
-					}),
-				});
+			if (!res.ok) throw new Error("Failed to create room");
+			const data = await res.json();
 
-				if (!res.ok) throw new Error("Failed to create room");
-				const data = await res.json();
-
-				return data.id;
-			} catch (err: unknown) {
-				this.error = (err as Error).message;
-				throw err;
-			} finally {
-				this.isLoading = false;
-			}
+			return data.id;
 		},
 
 		// HTTP: Fetch Room Details
 		async fetchRoomDetails(roomId: string) {
-			try {
-				if (!this.user) this.loadUser();
-				const userId = this.user?.userId || "";
-				const res = await fetch(
-					`${BACKEND_URL}/api/rooms/${roomId}?userId=${userId}`,
+			if (!this.user) this.loadUser();
+			const userId = this.user?.userId || "";
+			const res = await fetch(
+				`${BACKEND_URL}/api/rooms/${roomId}?userId=${userId}`,
+			);
+
+			if (!res.ok) throw new Error("Failed to load room details");
+			const data = await res.json();
+			this.room = data;
+
+			if (this.room) {
+				const allVoted = this.room.stories.every((story) =>
+					story.tasks.every((task) => task.points !== null),
 				);
 
-				if (!res.ok) throw new Error("Failed to load room details");
-				const data = await res.json();
-				this.room = data;
-
-				if (this.room) {
-					const allVoted = this.room.stories.every((story) =>
-						story.tasks.every((task) => task.points !== null),
-					);
-
-					if (!allVoted) {
-						this.isFinishModalDismissed = false;
-					}
+				if (!allVoted) {
+					this.isFinishModalDismissed = false;
 				}
-			} catch (err: unknown) {
-				this.error = (err as Error).message;
-				throw err;
 			}
 		},
 
@@ -263,12 +245,10 @@ export const useRoomStore = defineStore("room", {
 				(state: {
 					activeTaskId: string | null;
 					votingRevealed: boolean;
-					votesCount: number;
 					players: Player[];
 				}) => {
 					this.activeTaskId = state.activeTaskId;
 					this.votingRevealed = state.votingRevealed;
-					this.votesCount = state.votesCount;
 					this.players = state.players;
 				},
 			);
